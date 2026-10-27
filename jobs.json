@@ -1,0 +1,52 @@
+{
+  "config": {
+    "studioName": "The Commons Institute",
+    "subtitle": "CSS / PMS Design Deliverables Portal",
+    "logo": "https://drive.google.com/thumbnail?id=1UXUQy18al4R2d02jDxwlxAyABHR_nuCd&sz=w200",
+    "footerText": "The Commons Institute • Bilal Bhullar"
+  },
+  "jobs": [
+    {
+      "id": "job-2026-10-27-monroe-donroe-v1",
+      "date": "2026-10-27",
+      "topic": "Monroe vs Donroe Doctrine",
+      "type": "Carousel",
+      "version": "V1",
+      "status": "awaiting-approval",
+      "slideCount": 6,
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1pa2e0arPoI2ryoCZKAlcNDuk-74HDCWT",
+      "slides": [
+        {
+          "name": "Slide 01 — Cover: Monroe vs Donroe Doctrine",
+          "thumb": "https://drive.google.com/thumbnail?id=19cyWQcXqbPe5HWbxwGvJdbmaIf3LWuLy&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=19cyWQcXqbPe5HWbxwGvJdbmaIf3LWuLy"
+        },
+        {
+          "name": "Slide 02 — The Monroe Doctrine (1823)",
+          "thumb": "https://drive.google.com/thumbnail?id=1qmda-eN91e7_2fjD09jykKdauVWErLOV&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1qmda-eN91e7_2fjD09jykKdauVWErLOV"
+        },
+        {
+          "name": "Slide 03 — The Donroe Doctrine",
+          "thumb": "https://drive.google.com/thumbnail?id=1GFdgSODaYKvMry407K5Kp-0LkWaHm-U0&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1GFdgSODaYKvMry407K5Kp-0LkWaHm-U0"
+        },
+        {
+          "name": "Slide 04 — Donroe in Action",
+          "thumb": "https://drive.google.com/thumbnail?id=1tD9iC6ghPqVQ9D8mYiHhHorqtqR3NQWv&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1tD9iC6ghPqVQ9D8mYiHhHorqtqR3NQWv"
+        },
+        {
+          "name": "Slide 05 — What Changed, What Continued",
+          "thumb": "https://drive.google.com/thumbnail?id=1UAcqG0IEb2pV0xfFlcxgg0eFWNCVFF0F&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1UAcqG0IEb2pV0xfFlcxgg0eFWNCVFF0F"
+        },
+        {
+          "name": "Slide 06 — Why Donroe Is Back in the Spotlight",
+          "thumb": "https://drive.google.com/thumbnail?id=1D_gdPKxTO-TmXV5yberF133pbICysSZC&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1D_gdPKxTO-TmXV5yberF133pbICysSZC"
+        }
+      ]
+    }
+  ]
+}

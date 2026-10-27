@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Commons Institute — Client Design Gallery</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Brand Header (v1 preserved) -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#top" id="brandHomeLink" class="brand-identity" aria-label="Return to all jobs">
+        <img id="brandLogo" class="brand-logo" src="logo.png" alt="The Commons Institute Logo" />
+        <div class="brand-text">
+          <div id="brandTitle" class="brand-title">The Commons Institute</div>
+          <div id="brandSubtitle" class="brand-subtitle">CSS / PMS Design Deliverables Portal</div>
+        </div>
+      </a>
+      <div class="header-meta">
+        <span id="updatedIndicator" class="updated-pill" aria-live="polite">Updated --:--</span>
+        <span class="status-pill">
+          <span class="status-dot"></span>
+          <span id="totalJobsPill">2 Deliverables</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main id="top" class="main-container">
+
+    <!-- PAGE 1: HOME (Live Dashboard Strip + Search/Filter + Organized Status Sections) -->
+    <section id="homeView" aria-label="Design Jobs Gallery">
+
+      <!-- Feature 2: Live Dashboard Strip -->
+      <div id="dashboardStrip" class="dashboard-strip" aria-label="Live Design Summary">
+        <div class="dashboard-strip-top">
+          <span class="dashboard-strip-title">Live Studio &amp; Client Overview</span>
+        </div>
+        <div id="dashboardGrid" class="dashboard-grid"></div>
+      </div>
+
+      <!-- Search + Type Filter + Submit New Script button -->
+      <div class="toolbar">
+        <div class="toolbar-top-row">
+          <div class="search-box-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="search"
+              id="searchInput"
+              class="search-input"
+              placeholder="Search by topic (e.g. Foreign Policy, PMS Essay)..."
+              aria-label="Search jobs by topic"
+            />
+            <button type="button" id="clearSearchBtn" class="clear-search-btn" style="display: none;" aria-label="Clear search">
+              &times;
+            </button>
+          </div>
+
+          <button type="button" id="openScriptViewBtn" class="new-script-cta-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Submit New Script</span>
+          </button>
+        </div>
+
+        <div class="filter-row">
+          <div class="filter-pills" role="group" aria-label="Filter by design type">
+            <button type="button" class="filter-btn active" data-filter="All">All</button>
+            <button type="button" class="filter-btn" data-filter="Poster">Posters</button>
+            <button type="button" class="filter-btn" data-filter="Carousel">Carousels</button>
+          </div>
+          <div id="resultsSummary" class="results-summary">Showing all jobs</div>
+        </div>
+      </div>
+
+      <div id="jobsGrid" class="jobs-grid"></div>
+    </section>
+
+    <!-- PAGE 2: JOB VIEW (Header + Approve Button + All Slides Grid + Comment Box) -->
+    <section id="jobView" class="job-view-container" hidden aria-label="Job Details and Slides">
+      <div class="job-nav-bar">
+        <button type="button" id="backToGalleryBtn" class="back-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to All Jobs</span>
+        </button>
+      </div>
+
+      <div id="jobHeaderContainer"></div>
+      <div id="slidesGrid" class="slides-grid"></div>
+      <div id="jobFeedbackContainer"></div>
+    </section>
+
+    <!-- PAGE 3: SUBMIT NEW SCRIPT VIEW (Feature 6) -->
+    <section id="scriptView" class="job-view-container" hidden aria-label="Submit New Script and Reference Images">
+      <div class="job-nav-bar">
+        <button type="button" id="backFromScriptBtn" class="back-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to All Jobs</span>
+        </button>
+      </div>
+
+      <div class="feedback-grid">
+        <!-- Script Submission Form -->
+        <div class="panel-card">
+          <h1 class="panel-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span>Submit New Script</span>
+          </h1>
+          <p class="panel-desc">Send a new poster or carousel script to the studio. Once submitted, a summary is also copied to your clipboard so you can paste it in the client group if you wish.</p>
+
+          <form id="newScriptForm" novalidate>
+            <div class="form-group" style="margin-bottom: 0.8rem;">
+              <label class="form-label" for="newScriptText">Script Content (required) *</label>
+              <textarea
+                id="newScriptText"
+                class="form-textarea"
+                required
+                placeholder="Paste or type the slide-by-slide copy or poster headline, dates, and key bullet points..."
+              ></textarea>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0.9rem;">
+              <label class="form-label" for="newScriptComment">Related Comment / Design Direction (optional)</label>
+              <textarea
+                id="newScriptComment"
+                class="form-textarea"
+                style="min-height: 76px;"
+                placeholder="Optional notes (e.g., Poster or 6-slide Carousel, preferred color emphasis, target batch date)..."
+              ></textarea>
+            </div>
+
+            <button type="submit" id="submitNewScriptBtn" class="btn btn-primary" style="width: 100%;">
+              <span>Submit Script</span>
+            </button>
+          </form>
+
+          <div id="newScriptFeedback" hidden></div>
+        </div>
+
+        <!-- Honest Static Equivalent for Reference Image Uploads -->
+        <div class="panel-card">
+          <h2 class="panel-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Reference Images &amp; Assets</span>
+          </h2>
+
+          <div class="upload-honest-box">
+            <p class="panel-desc" style="color: var(--text-main); font-weight: 500;">
+              Upload your images to the Client Uploads Drive folder (button below). Originals are kept exactly as uploaded — no compression, full HD preserved. Or send them as WhatsApp documents (full quality).
+            </p>
+            <a
+              id="clientUploadsFolderBtn"
+              class="btn btn-maroon"
+              href="#scriptView"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span>Open Client Uploads Drive Folder</span>
+            </a>
+            <div id="clientUploadsFolderNote" hidden></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FULL-SCREEN LIGHTBOX VIEWER (v1 preserved) -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Full screen slide viewer" hidden>
+    <div class="lightbox-top">
+      <span id="lightboxCounter" class="lightbox-counter">Slide 1 of 1</span>
+      <button type="button" id="lightboxCloseBtn" class="lightbox-close-btn" aria-label="Close full-screen viewer">
+        <span>Close</span>
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <div class="lightbox-stage">
+      <button type="button" id="lightboxPrevBtn" class="lightbox-nav-btn prev" aria-label="Previous slide">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div id="lightboxImgContainer" class="lightbox-img-container"></div>
+
+      <button type="button" id="lightboxNextBtn" class="lightbox-nav-btn next" aria-label="Next slide">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <div class="lightbox-bottom">
+      <div class="lightbox-slide-info">
+        <div id="lightboxSlideTitle" class="lightbox-slide-title">Slide Name</div>
+        <div id="lightboxSlideSub" class="lightbox-slide-sub">Job Details</div>
+      </div>
+      <a id="lightboxDownloadBtn" class="lightbox-download-btn" href="https://drive.google.com" target="_blank" rel="noopener noreferrer" download>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Download HD Original</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Feature 1: Footer Credit ("The Commons Institute • Bilal Bhullar") -->
+  <footer class="site-footer">
+    <div id="footerCreditText">The Commons Institute &bull; Bilal Bhullar</div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
