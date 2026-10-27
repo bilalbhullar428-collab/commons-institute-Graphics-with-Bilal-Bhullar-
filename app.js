@@ -27,23 +27,23 @@ var APP_CONFIG = {
   // Google Form field mapping (replace with your Form's entry.XXXXXXX IDs)
   formFields: {
     approval: {
-      jobId: "entry.738878600",
-      topic: "entry.755519454",
-      type: "entry.506866609",
-      version: "entry.1538896076",
-      decision: "entry.1443552225"
+      jobId: "entry.240418436",
+      topic: "entry.1797275031",
+      type: "entry.230484405",
+      version: "entry.1648103189",
+      decision: "entry.1211808544"
     },
     comment: {
-      jobId: "entry.738878600",
-      topic: "entry.755519454",
-      type: "entry.506866609",
-      version: "entry.1538896076",
-      comment: "entry.477257370",
-      name: "entry.1284939730"
+      jobId: "entry.240418436",
+      topic: "entry.1797275031",
+      type: "entry.230484405",
+      version: "entry.1648103189",
+      comment: "entry.486198956",
+      name: "entry.1003084440"
     },
     newScript: {
-      script: "entry.477257370",
-      comment: "entry.1821626378"
+      script: "entry.486198956",
+      comment: "entry.191806707"
     }
   },
 
