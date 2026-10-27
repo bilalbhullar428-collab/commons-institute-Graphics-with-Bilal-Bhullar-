@@ -183,3 +183,6 @@ Because a static webpage cannot upload binary files directly into Google Drive w
 
 - **Footer Credit Text**: By default, the footer displays `"The Commons Institute • Bilal Bhullar"`. You can change `"footerText"` in `jobs.json` (under `"config"`) or in `APP_CONFIG.footerText` at the top of `app.js`.
 - **Header Logo & Title**: Edit `"studioName"`, `"subtitle"`, or `"logo"` in `jobs.json` (under `"config"`) or replace `logo.png` in the project folder.
+
+## Live site
+https://bilalbhullar428-collab.github.io/commons-institute-Graphics-with-Bilal-Bhullar-/
