@@ -1210,16 +1210,14 @@ body {
 }
 
 .lightbox-counter {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  z-index: 6;
-  font-size: 0.8rem;
+  display: inline-block;
+  font-size: 0.75rem;
   font-weight: 700;
-  background: rgba(0, 0, 0, 0.65);
+  background: #1A2B4A;
   color: #FFFFFF;
-  padding: 0.3rem 0.7rem;
+  padding: 0.2rem 0.6rem;
   border-radius: 999px;
+  margin-top: 0.25rem;
 }
 
 .lightbox-close-btn {
@@ -1271,9 +1269,6 @@ body {
 }
 
 .lightbox-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -1479,4 +1474,91 @@ body {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.35rem;
   }
+}
+
+/* v2.2: lightbox controls row (arrows flank dots BELOW the image; image stays 100% clean) */
+.lightbox-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 0.5rem 0 0.25rem;
+}
+
+/* v2.2: script form select */
+.form-select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  background: #FFFFFF;
+  font-size: 0.95rem;
+  color: #1A2B4A;
+}
+
+/* v2.2: Scripts mili + past-jobs sections */
+.extra-section {
+  margin-top: 2rem;
+}
+
+.extra-section-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1A2B4A;
+  margin: 0 0 0.9rem;
+}
+
+.scripts-list,
+.past-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.script-card,
+.past-card {
+  background: #FFFFFF;
+  border: 1px solid #e5e0d5;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+
+.script-card-topic,
+.past-card-name {
+  font-weight: 700;
+  color: #1A2B4A;
+  font-size: 0.98rem;
+}
+
+.script-card-meta,
+.past-card-meta {
+  font-size: 0.82rem;
+  color: #737373;
+  margin-top: 0.25rem;
+}
+
+.script-card-note {
+  font-size: 0.88rem;
+  color: #333333;
+  margin-top: 0.4rem;
+}
+
+.past-card-mark {
+  color: #1a7f37;
+  font-weight: 700;
+}
+
+.extra-empty {
+  background: #FAF6F0;
+  border: 1px dashed #d8cfc0;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  color: #737373;
+}
+
+.upload-steps-list {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+  color: #333333;
+  font-size: 0.92rem;
+  line-height: 1.6;
 }

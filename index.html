@@ -82,6 +82,18 @@
       </div>
 
       <div id="jobsGrid" class="jobs-grid"></div>
+
+      <!-- v2.2: Scripts received (text cards, no images) -->
+      <section id="scriptsSection" class="extra-section" aria-label="Scripts received">
+        <h2 class="extra-section-title">Scripts Mili</h2>
+        <div id="scriptsList" class="scripts-list"></div>
+      </section>
+
+      <!-- v2.2: Past jobs completed on WhatsApp (name + date only; hidden while empty) -->
+      <section id="pastJobsSection" class="extra-section" hidden aria-label="Past completed work">
+        <h2 class="extra-section-title">Pehle Mukammal Kaam (WhatsApp)</h2>
+        <div id="pastJobsList" class="past-list"></div>
+      </section>
     </section>
 
     <!-- PAGE 2: JOB VIEW (Header + Approve Button + All Slides Grid + Comment Box) -->
@@ -129,6 +141,20 @@
 
           <form id="newScriptForm" novalidate>
             <div class="form-group" style="margin-bottom: 0.8rem;">
+              <label class="form-label" for="newScriptTopic">Topic (required) *</label>
+              <input type="text" id="newScriptTopic" class="form-input" required placeholder="e.g. Foreign Policy of Pakistan" />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0.8rem;">
+              <label class="form-label" for="newScriptType">Type (required) *</label>
+              <select id="newScriptType" class="form-select" required>
+                <option value="">Choose Poster or Carousel...</option>
+                <option value="Poster">Poster</option>
+                <option value="Carousel">Carousel</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0.8rem;">
               <label class="form-label" for="newScriptText">Script Content (required) *</label>
               <textarea
                 id="newScriptText"
@@ -146,6 +172,11 @@
                 style="min-height: 76px;"
                 placeholder="Optional notes (e.g., Poster or 6-slide Carousel, preferred color emphasis, target batch date)..."
               ></textarea>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0.9rem;">
+              <label class="form-label" for="newScriptFiles">Uploaded file names (optional)</label>
+              <input type="text" id="newScriptFiles" class="form-input" placeholder="e.g. logo.png, reference-photo.jpg (files uploaded to the Drive folder)" />
             </div>
 
             <button type="submit" id="submitNewScriptBtn" class="btn btn-primary" style="width: 100%;">
@@ -168,9 +199,13 @@
           </h2>
 
           <div class="upload-honest-box">
-            <p class="panel-desc" style="color: var(--text-main); font-weight: 500;">
-              Upload your images to the Client Uploads Drive folder (button below). Originals are kept exactly as uploaded — no compression, full HD preserved. Or send them as WhatsApp documents (full quality).
-            </p>
+            <p class="panel-desc" style="color: var(--text-main); font-weight: 500;">Tasveerain ya files bhejne ke 3 steps:</p>
+            <ol class="upload-steps-list">
+              <li>Neeche wale button se Client Uploads Drive folder kholein.</li>
+              <li>Apni files upload karein (originals bilkul waisi hi mehfooz rehti hain — koi compression nahi, full HD barkarar).</li>
+              <li>Script form mein "Uploaded file names" mein files ke naam likh dein taake studio unhein script se match kar sake.</li>
+            </ol>
+            <p class="panel-desc">Ya files ko WhatsApp documents ke tor par bhej dein (full quality).</p>
             <a
               id="clientUploadsFolderBtn"
               class="btn btn-maroon"
@@ -199,6 +234,7 @@
         <div class="lightbox-ig-text">
           <div class="lightbox-ig-name">thecommonsinstitute</div>
           <div id="lightboxIgTopic" class="lightbox-ig-topic">Topic</div>
+          <div id="lightboxCounter" class="lightbox-counter">1/1</div>
         </div>
       </div>
       <button type="button" id="lightboxCloseBtn" class="lightbox-close-btn" aria-label="Close full-screen viewer">
@@ -208,24 +244,22 @@
     </div>
 
     <div class="lightbox-stage">
+      <div id="lightboxImgContainer" class="lightbox-img-container"></div>
+    </div>
+
+    <div id="lightboxControls" class="lightbox-controls">
       <button type="button" id="lightboxPrevBtn" class="lightbox-nav-btn prev" aria-label="Previous slide">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
       </button>
-
-      <div id="lightboxImgContainer" class="lightbox-img-container"></div>
-
-      <span id="lightboxCounter" class="lightbox-counter">1/1</span>
-
+      <div id="lightboxDots" class="lightbox-dots"></div>
       <button type="button" id="lightboxNextBtn" class="lightbox-nav-btn next" aria-label="Next slide">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
       </button>
     </div>
-
-    <div id="lightboxDots" class="lightbox-dots"></div>
 
     <div class="lightbox-bottom">
       <div class="lightbox-slide-info">

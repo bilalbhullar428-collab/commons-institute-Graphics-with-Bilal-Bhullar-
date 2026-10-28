@@ -42,14 +42,16 @@ var APP_CONFIG = {
       name: "entry.1003084440"
     },
     newScript: {
+      topic: "entry.1797275031",
+      type: "entry.230484405",
       script: "entry.486198956",
       comment: "entry.191806707"
     }
   },
 
-  // Client Uploads Google Drive Folder URL (set folder sharing to "Anyone with the link" -> Editor/Contributor)
-  // Example: "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz"
-  clientUploadsFolderUrl: "https://drive.google.com/drive/folders/1ird6Bz8Zz8zQ6hqHOktys0nms6BSaJHh",
+  // Client Uploads Google Drive Folder URL — PERMANENT veo3 folder
+  // (sharing must be "Anyone with the link" -> Writer/Editor; verified on first real client upload)
+  clientUploadsFolderUrl: "https://drive.google.com/drive/folders/109EmwJMs7eT-PjG3Y7VrD9v08EQcon8T",
 
   // Auto-refresh interval in milliseconds (5 minutes = 300000 ms)
   refreshIntervalMs: 300000,
@@ -71,55 +73,14 @@ var APP_CONFIG = {
     "logo": "https://drive.google.com/thumbnail?id=1UXUQy18al4R2d02jDxwlxAyABHR_nuCd&sz=w200",
     "footerText": "The Commons Institute • Bilal Bhullar"
   },
-  "jobs": [
-    {
-      "id": "job-2026-10-27-monroe-donroe-v1",
-      "date": "2026-10-27",
-      "topic": "Monroe vs Donroe Doctrine",
-      "type": "Carousel",
-      "version": "V1",
-      "status": "awaiting-approval",
-      "slideCount": 6,
-      "zipDownload": "https://drive.google.com/uc?export=download&id=1pa2e0arPoI2ryoCZKAlcNDuk-74HDCWT",
-      "slides": [
-        {
-          "name": "Slide 01 — Cover: Monroe vs Donroe Doctrine",
-          "thumb": "https://drive.google.com/thumbnail?id=19cyWQcXqbPe5HWbxwGvJdbmaIf3LWuLy&sz=w1000",
-          "download": "https://drive.google.com/uc?export=download&id=19cyWQcXqbPe5HWbxwGvJdbmaIf3LWuLy"
-        },
-        {
-          "name": "Slide 02 — The Monroe Doctrine (1823)",
-          "thumb": "https://drive.google.com/thumbnail?id=1qmda-eN91e7_2fjD09jykKdauVWErLOV&sz=w1000",
-          "download": "https://drive.google.com/uc?export=download&id=1qmda-eN91e7_2fjD09jykKdauVWErLOV"
-        },
-        {
-          "name": "Slide 03 — The Donroe Doctrine",
-          "thumb": "https://drive.google.com/thumbnail?id=1GFdgSODaYKvMry407K5Kp-0LkWaHm-U0&sz=w1000",
-          "download": "https://drive.google.com/uc?export=download&id=1GFdgSODaYKvMry407K5Kp-0LkWaHm-U0"
-        },
-        {
-          "name": "Slide 04 — Donroe in Action",
-          "thumb": "https://drive.google.com/thumbnail?id=1tD9iC6ghPqVQ9D8mYiHhHorqtqR3NQWv&sz=w1000",
-          "download": "https://drive.google.com/uc?export=download&id=1tD9iC6ghPqVQ9D8mYiHhHorqtqR3NQWv"
-        },
-        {
-          "name": "Slide 05 — What Changed, What Continued",
-          "thumb": "https://drive.google.com/thumbnail?id=1UAcqG0IEb2pV0xfFlcxgg0eFWNCVFF0F&sz=w1000",
-          "download": "https://drive.google.com/uc?export=download&id=1UAcqG0IEb2pV0xfFlcxgg0eFWNCVFF0F"
-        },
-        {
-          "name": "Slide 06 — Why Donroe Is Back in the Spotlight",
-          "thumb": "https://drive.google.com/thumbnail?id=1D_gdPKxTO-TmXV5yberF133pbICysSZC&sz=w1000",
-          "download": "https://drive.google.com/uc?export=download&id=1D_gdPKxTO-TmXV5yberF133pbICysSZC"
-        }
-      ]
-    }
-  ]
+  "jobs": []
 };
 
   var state = {
     config: Object.assign({}, APP_CONFIG),
     jobs: [],
+    scripts: [],
+    pastJobs: [],
     searchQuery: "",
     typeFilter: "All", // "All" | "Poster" | "Carousel"
     activeJobId: null,
@@ -165,14 +126,22 @@ var APP_CONFIG = {
     els.newScriptText = document.getElementById("newScriptText");
     els.newScriptComment = document.getElementById("newScriptComment");
     els.newScriptFeedback = document.getElementById("newScriptFeedback");
+    els.newScriptTopic = document.getElementById("newScriptTopic");
+    els.newScriptType = document.getElementById("newScriptType");
+    els.newScriptFiles = document.getElementById("newScriptFiles");
     els.clientUploadsFolderBtn = document.getElementById("clientUploadsFolderBtn");
     els.clientUploadsFolderNote = document.getElementById("clientUploadsFolderNote");
+    els.scriptsSection = document.getElementById("scriptsSection");
+    els.scriptsList = document.getElementById("scriptsList");
+    els.pastJobsSection = document.getElementById("pastJobsSection");
+    els.pastJobsList = document.getElementById("pastJobsList");
 
     els.lightbox = document.getElementById("lightbox");
     els.lightboxCounter = document.getElementById("lightboxCounter");
     els.lightboxAvatar = document.getElementById("lightboxAvatar");
     els.lightboxIgTopic = document.getElementById("lightboxIgTopic");
     els.lightboxDots = document.getElementById("lightboxDots");
+    els.lightboxControls = document.getElementById("lightboxControls");
     els.lightboxStatusLine = document.getElementById("lightboxStatusLine");
     els.lightboxApproveBtn = document.getElementById("lightboxApproveBtn");
     els.lightboxCommentBtn = document.getElementById("lightboxCommentBtn");
@@ -999,34 +968,49 @@ var APP_CONFIG = {
   // Handle Feature 6: Submit New Script Form
   function handleNewScriptSubmit(e) {
     e.preventDefault();
+    var topicVal = els.newScriptTopic ? els.newScriptTopic.value.trim() : "";
+    var typeVal = els.newScriptType ? els.newScriptType.value : "";
     var scriptVal = els.newScriptText ? els.newScriptText.value.trim() : "";
     var commentVal = els.newScriptComment ? els.newScriptComment.value.trim() : "";
+    var filesVal = els.newScriptFiles ? els.newScriptFiles.value.trim() : "";
     var banner = els.newScriptFeedback;
 
-    if (!scriptVal) {
+    if (!topicVal || !typeVal || !scriptVal) {
       if (banner) {
         banner.className = "feedback-banner warning";
         banner.hidden = false;
-        banner.innerHTML = '<div>Please enter the script text before submitting.</div>';
+        banner.innerHTML = '<div>Please enter the topic, choose Poster or Carousel, and enter the script text before submitting.</div>';
       }
-      if (els.newScriptText) els.newScriptText.focus();
+      if (!topicVal && els.newScriptTopic) els.newScriptTopic.focus();
+      else if (!typeVal && els.newScriptType) els.newScriptType.focus();
+      else if (els.newScriptText) els.newScriptText.focus();
       return;
     }
 
+    var commentPayload = commentVal;
+    if (filesVal) {
+      commentPayload = (commentPayload ? commentPayload + "\n" : "") + "Uploaded files: " + filesVal;
+    }
+
     var timestamp = new Date().toISOString();
-    var copySummary = "New Script: " + scriptVal + (commentVal ? " (Comment: " + commentVal + ")" : "");
+    var copySummary = "New Script: " + topicVal + " (" + typeVal + ") — " + scriptVal + (commentPayload ? " (Comment: " + commentPayload + ")" : "");
 
     submitToGoogleForm(
       state.config.formFields && state.config.formFields.newScript,
       {
+        topic: topicVal,
+        type: typeVal,
         script: scriptVal,
-        comment: commentVal,
+        comment: commentPayload,
         timestamp: timestamp
       },
       function (res) {
         copyTextToClipboard(copySummary, function () {
+          if (els.newScriptTopic) els.newScriptTopic.value = "";
+          if (els.newScriptType) els.newScriptType.value = "";
           if (els.newScriptText) els.newScriptText.value = "";
           if (els.newScriptComment) els.newScriptComment.value = "";
+          if (els.newScriptFiles) els.newScriptFiles.value = "";
           if (!banner) return;
           var placeholderNote = (!res || !res.configured)
             ? '<div style="font-size: 0.8rem; color: var(--amber-warn); margin-top: 0.25rem;">Note: recording will activate once the Form is connected.</div>'
@@ -1120,6 +1104,7 @@ var APP_CONFIG = {
 
     els.lightboxPrevBtn.style.display = isCarousel ? "inline-flex" : "none";
     els.lightboxNextBtn.style.display = isCarousel ? "inline-flex" : "none";
+    if (els.lightboxControls) els.lightboxControls.style.display = isCarousel ? "flex" : "none";
 
     // High-res preview uses larger thumbnail parameter (sz=w2000) while Download HD fetches the raw original uc?export=download file
     var highResPreviewUrl = String(slide.thumb || "").replace(/sz=w\d+/i, "sz=w2000");
@@ -1219,6 +1204,13 @@ var APP_CONFIG = {
           var jobId = target.getAttribute("data-job-id");
           openJobView(jobId);
         }
+      });
+    }
+
+    if (els.scriptsList) {
+      els.scriptsList.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-action='open-script-view']");
+        if (btn) openScriptView();
       });
     }
 
@@ -1387,7 +1379,69 @@ var APP_CONFIG = {
   }
 
   // Fetch jobs.json and refresh UI (Feature 7)
+  // v2.2: Scripts received + past WhatsApp jobs (separate files; Muse
+  // updates them from the Responses Sheet / Bilal's instruction).
+  function fetchExtraSections() {
+    fetch("scripts.json?_t=" + Date.now(), { cache: "no-store" })
+      .then(function (res) { if (!res.ok) throw new Error("HTTP " + res.status); return res.json(); })
+      .then(function (data) {
+        state.scripts = Array.isArray(data.scripts) ? data.scripts : [];
+        renderScriptsSection();
+      })
+      .catch(function () { renderScriptsSection(); });
+    fetch("past-jobs.json?_t=" + Date.now(), { cache: "no-store" })
+      .then(function (res) { if (!res.ok) throw new Error("HTTP " + res.status); return res.json(); })
+      .then(function (data) {
+        state.pastJobs = Array.isArray(data.records) ? data.records : [];
+        renderPastJobsSection();
+      })
+      .catch(function () { renderPastJobsSection(); });
+  }
+
+  function renderScriptsSection() {
+    if (!els.scriptsList) return;
+    var list = state.scripts || [];
+    if (list.length === 0) {
+      els.scriptsList.innerHTML =
+        '<div class="extra-empty">' +
+          '<p>Abhi koi script nahi mili.</p>' +
+          '<button type="button" class="btn btn-primary" data-action="open-script-view">Submit New Script</button>' +
+        '</div>';
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < list.length; i++) {
+      var s = list[i] || {};
+      html += '<div class="script-card">' +
+        '<div class="script-card-topic">' + escapeHtml(s.topic || "Untitled script") + '</div>' +
+        '<div class="script-card-meta">' + escapeHtml(s.type || "") + (s.type ? " • " : "") + escapeHtml(formatDate(s.date)) + '</div>' +
+        (s.note ? '<div class="script-card-note">' + escapeHtml(s.note) + '</div>' : "") +
+      '</div>';
+    }
+    els.scriptsList.innerHTML = html;
+  }
+
+  function renderPastJobsSection() {
+    if (!els.pastJobsSection || !els.pastJobsList) return;
+    var list = state.pastJobs || [];
+    if (list.length === 0) {
+      els.pastJobsSection.hidden = true;
+      return;
+    }
+    els.pastJobsSection.hidden = false;
+    var html = "";
+    for (var i = 0; i < list.length; i++) {
+      var r = list[i] || {};
+      html += '<div class="past-card">' +
+        '<div class="past-card-name">' + escapeHtml(r.name || "") + '</div>' +
+        '<div class="past-card-meta">' + escapeHtml(formatDate(r.date)) + ' • <span class="past-card-mark">WhatsApp par mukammal hua</span></div>' +
+      '</div>';
+    }
+    els.pastJobsList.innerHTML = html;
+  }
+
   function fetchJobsData(isInitial) {
+    fetchExtraSections();
     fetch("jobs.json?_t=" + Date.now(), { cache: "no-store" })
       .then(function (res) {
         if (!res.ok) throw new Error("HTTP " + res.status);

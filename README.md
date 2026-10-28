@@ -186,3 +186,13 @@ Because a static webpage cannot upload binary files directly into Google Drive w
 
 ## Live site
 https://bilalbhullar428-collab.github.io/commons-institute-Graphics-with-Bilal-Bhullar-/
+
+## v2.2 (2026-10-28) — client intake completed + clean lightbox
+- Lightbox is 100% clean: the X/Y badge moved into the header (carousel only, like an IG post header); prev/next arrows moved BELOW the image, flanking the dots. Nothing overlays the image.
+- Client Uploads folder now points to the PERMANENT veo3 folder (was the old 428 folder — fixed). Sharing must be "Anyone with the link" -> Writer/Editor; proven on the first real client upload.
+- New Script form now takes Topic (required) + Type Poster/Carousel (required) + Script + Related Comment + Uploaded file names (optional, appended to the Related Comment). Topic/Type land in the Responses Sheet's Topic/Type columns.
+- Upload panel is a 3-step flow: open folder -> upload -> write file names in the script form. WhatsApp documents remain the fallback.
+- "Scripts Mili" section (home, text cards: topic + type + date, no images) reads scripts.json. "Pehle Mukammal Kaam (WhatsApp)" reads past-jobs.json (name + date only, marked "WhatsApp par mukammal hua") and stays hidden while empty.
+- How Muse updates them: a real script arriving in the Responses Sheet (Comment/Script filled, no Job ID) -> append {topic, type, date} to scripts.json. A past WhatsApp job -> append {name, date} to past-jobs.json ONLY on Bilal's instruction. Neither file is ever touched by ChatGPT (the pakka prompt only appends job entries to jobs.json).
+- FALLBACK_DATA jobs emptied: with jobs.json clean, a failed fetch must never resurrect a test job.
+- Header crest still uses the proven 428-Drive thumbnail (veo3 logo thumbnail not yet proven to serve) — switch only after a proven veo3 thumbnail check.
