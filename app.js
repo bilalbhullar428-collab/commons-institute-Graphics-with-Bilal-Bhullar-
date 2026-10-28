@@ -52,7 +52,12 @@ var APP_CONFIG = {
   clientUploadsFolderUrl: "https://drive.google.com/drive/folders/1ird6Bz8Zz8zQ6hqHOktys0nms6BSaJHh",
 
   // Auto-refresh interval in milliseconds (5 minutes = 300000 ms)
-  refreshIntervalMs: 300000
+  refreshIntervalMs: 300000,
+
+  // Supabase live-status layer (public publishable key only — RLS limits
+  // it to SELECT on job_status; NEVER put a secret key here).
+  supabaseUrl: "https://jvzyxjmdgvtjnhcilump.supabase.co",
+  supabaseAnonKey: "sb_publishable_YhjpfnMFn_GokxmW4mt4vA_pL1CHDzu"
 };
 
 (function () {
@@ -121,6 +126,7 @@ var APP_CONFIG = {
     activeView: "home", // "home" | "job" | "script"
     lightboxJob: null,
     lightboxSlideIndex: 0,
+    liveStatusMap: {},
     lastUpdatedText: ""
   };
 
@@ -164,6 +170,12 @@ var APP_CONFIG = {
 
     els.lightbox = document.getElementById("lightbox");
     els.lightboxCounter = document.getElementById("lightboxCounter");
+    els.lightboxAvatar = document.getElementById("lightboxAvatar");
+    els.lightboxIgTopic = document.getElementById("lightboxIgTopic");
+    els.lightboxDots = document.getElementById("lightboxDots");
+    els.lightboxStatusLine = document.getElementById("lightboxStatusLine");
+    els.lightboxApproveBtn = document.getElementById("lightboxApproveBtn");
+    els.lightboxCommentBtn = document.getElementById("lightboxCommentBtn");
     els.lightboxCloseBtn = document.getElementById("lightboxCloseBtn");
     els.lightboxPrevBtn = document.getElementById("lightboxPrevBtn");
     els.lightboxNextBtn = document.getElementById("lightboxNextBtn");
@@ -246,9 +258,12 @@ var APP_CONFIG = {
   // Update "Updated HH:MM" indicator (Feature 7)
   function markUpdatedNow() {
     var now = new Date();
-    var hh = String(now.getHours()).padStart(2, "0");
+    var h24 = now.getHours();
+    var ampm = h24 >= 12 ? "PM" : "AM";
+    var h12 = h24 % 12;
+    if (h12 === 0) h12 = 12;
     var mm = String(now.getMinutes()).padStart(2, "0");
-    state.lastUpdatedText = "Updated " + hh + ":" + mm;
+    state.lastUpdatedText = "Updated " + h12 + ":" + mm + " " + ampm;
     if (els.updatedIndicator) {
       els.updatedIndicator.textContent = state.lastUpdatedText;
     }
@@ -879,6 +894,15 @@ var APP_CONFIG = {
         timestamp: timestamp
       },
       function (res) {
+        // Optimistic UI: the approver sees Approved instantly (0-second
+        // feel); the bridge + Supabase push confirms it for everyone
+        // seconds later, and jobs.json remains the fallback record.
+        if (job.status !== "approved") {
+          job.status = "approved";
+          if (state.lightboxJob && String(state.lightboxJob.id) === String(job.id)) renderLightboxSlide();
+          if (state.activeView === "home") renderHome();
+          else if (state.activeView === "job") openJobView(job.id);
+        }
         copyTextToClipboard(copySummary, function () {
           var banner = document.getElementById("approveFeedbackBanner");
           if (!banner) return;
@@ -1054,14 +1078,48 @@ var APP_CONFIG = {
     var idx = state.lightboxSlideIndex;
     var slide = slides[idx];
     if (!slide) return;
+    var isCarousel = slides.length > 1;
 
-    els.lightboxCounter.textContent = "Slide " + (idx + 1) + " of " + slides.length;
+    // Instagram-style header: avatar + handle + topic
+    if (els.lightboxAvatar && state.config.logo) els.lightboxAvatar.setAttribute("src", state.config.logo);
+    if (els.lightboxIgTopic) els.lightboxIgTopic.textContent = job.topic || "";
+
+    // Carousel badge "X/Y" (like IG "1/8"); posters get no badge, like IG single posts
+    if (els.lightboxCounter) {
+      els.lightboxCounter.textContent = (idx + 1) + "/" + slides.length;
+      els.lightboxCounter.style.display = isCarousel ? "inline-block" : "none";
+    }
+
+    // Dots (carousel only; tap a dot to jump to that slide)
+    if (els.lightboxDots) {
+      if (!isCarousel) {
+        els.lightboxDots.innerHTML = "";
+        els.lightboxDots.style.display = "none";
+      } else {
+        els.lightboxDots.style.display = "flex";
+        var dotsHtml = "";
+        for (var d = 0; d < slides.length; d++) {
+          dotsHtml += '<button type="button" class="lightbox-dot' + (d === idx ? " active" : "") + '" data-action="lightbox-dot" data-slide-index="' + d + '" aria-label="Go to slide ' + (d + 1) + '"></button>';
+        }
+        els.lightboxDots.innerHTML = dotsHtml;
+      }
+    }
+
+    // Caption keeps every previous detail: slide name, topic • type (version),
+    // status, and slide position — plus real actions (no fake engagement).
     els.lightboxSlideTitle.textContent = slide.name || ("Slide " + (idx + 1));
     els.lightboxSlideSub.textContent = job.topic + " • " + job.type + " (" + job.version + ")";
-    els.lightboxDownloadBtn.setAttribute("href", slide.download);
+    if (els.lightboxStatusLine) {
+      els.lightboxStatusLine.textContent = "Slide " + (idx + 1) + " of " + slides.length + " • " + getStatusLabel(getJobStatus(job.status));
+    }
+    if (els.lightboxDownloadBtn) els.lightboxDownloadBtn.setAttribute("href", slide.download);
+    if (els.lightboxApproveBtn) {
+      els.lightboxApproveBtn.setAttribute("data-job-id", job.id);
+      els.lightboxApproveBtn.style.display = job.status === "approved" ? "none" : "inline-flex";
+    }
 
-    els.lightboxPrevBtn.style.display = slides.length > 1 ? "inline-flex" : "none";
-    els.lightboxNextBtn.style.display = slides.length > 1 ? "inline-flex" : "none";
+    els.lightboxPrevBtn.style.display = isCarousel ? "inline-flex" : "none";
+    els.lightboxNextBtn.style.display = isCarousel ? "inline-flex" : "none";
 
     // High-res preview uses larger thumbnail parameter (sz=w2000) while Download HD fetches the raw original uc?export=download file
     var highResPreviewUrl = String(slide.thumb || "").replace(/sz=w\d+/i, "sz=w2000");
@@ -1210,6 +1268,33 @@ var APP_CONFIG = {
         stepLightbox(1);
       });
     }
+    if (els.lightboxApproveBtn) {
+      els.lightboxApproveBtn.addEventListener("click", function () {
+        if (state.lightboxJob) handleApproveJob(state.lightboxJob.id);
+      });
+    }
+    if (els.lightboxCommentBtn) {
+      els.lightboxCommentBtn.addEventListener("click", function () {
+        var job = state.lightboxJob;
+        closeLightbox();
+        if (job) {
+          openJobView(job.id);
+          var nameInput = document.getElementById("commentAuthorInput");
+          if (nameInput && nameInput.focus) nameInput.focus();
+        }
+      });
+    }
+    if (els.lightboxDots) {
+      els.lightboxDots.addEventListener("click", function (e) {
+        var dot = e.target.closest("[data-action='lightbox-dot']");
+        if (!dot) return;
+        var idx = parseInt(dot.getAttribute("data-slide-index"), 10);
+        if (!isNaN(idx)) {
+          state.lightboxSlideIndex = idx;
+          renderLightboxSlide();
+        }
+      });
+    }
 
     if (els.lightbox) {
       els.lightbox.addEventListener("click", function (e) {
@@ -1238,6 +1323,69 @@ var APP_CONFIG = {
     });
   }
 
+  // Supabase live-status layer (v2.1): job_status overlays jobs.json
+  // statuses, and Realtime pushes update cards + lightbox in place (no
+  // reload). Fallback: if Supabase is unreachable or paused, jobs.json
+  // statuses stand untouched. The publishable key is public by design
+  // (RLS limits it to SELECT on job_status); NEVER put a secret or
+  // service key in this file.
+  var supabaseClient = null;
+
+  function supabaseConfigured() {
+    var u = String(APP_CONFIG.supabaseUrl || "").trim();
+    var k = String(APP_CONFIG.supabaseAnonKey || "").trim();
+    return u.indexOf("http") === 0 && k.length > 0 && u.indexOf("PLACEHOLDER") === -1;
+  }
+
+  function cacheLiveStatuses(rows) {
+    if (!Array.isArray(rows)) return;
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (r && r.job_id) state.liveStatusMap[String(r.job_id)] = String(r.status);
+    }
+  }
+
+  function applyLiveStatusMap(render) {
+    var changed = false;
+    for (var i = 0; i < state.jobs.length; i++) {
+      var j = state.jobs[i];
+      var s = state.liveStatusMap[String(j.id)];
+      if (s && (s === "approved" || s === "awaiting-approval" || s === "pending" || s === "delivered") && j.status !== s) {
+        j.status = s;
+        changed = true;
+      }
+    }
+    if (changed && render) {
+      if (state.activeView === "home") renderHome();
+      else if (state.lightboxJob) renderLightboxSlide();
+      markUpdatedNow();
+    }
+    return changed;
+  }
+
+  function initSupabaseLive() {
+    if (!supabaseConfigured()) return;
+    if (typeof window.supabase === "undefined" || !window.supabase.createClient) return;
+    try {
+      supabaseClient = window.supabase.createClient(APP_CONFIG.supabaseUrl, APP_CONFIG.supabaseAnonKey);
+      supabaseClient.from("job_status").select("job_id,status").then(function (res) {
+        if (res && !res.error && Array.isArray(res.data)) {
+          cacheLiveStatuses(res.data);
+          applyLiveStatusMap(true);
+        }
+      }).catch(function () { /* fallback: jobs.json statuses stand */ });
+      supabaseClient.channel("job_status_changes")
+        .on("postgres_changes", { event: "*", schema: "public", table: "job_status" }, function (payload) {
+          var row = payload.new || payload.old;
+          if (row && row.job_id) {
+            cacheLiveStatuses([{ job_id: row.job_id, status: row.status }]);
+            applyLiveStatusMap(true);
+          }
+        })
+        .subscribe();
+    } catch (e) { /* fallback: jobs.json statuses stand */ }
+  }
+
   // Fetch jobs.json and refresh UI (Feature 7)
   function fetchJobsData(isInitial) {
     fetch("jobs.json?_t=" + Date.now(), { cache: "no-store" })
@@ -1247,6 +1395,7 @@ var APP_CONFIG = {
       })
       .then(function (data) {
         applyData(data);
+        applyLiveStatusMap(false);
         if (state.activeView === "home" || isInitial) {
           renderHome();
         }
@@ -1254,6 +1403,7 @@ var APP_CONFIG = {
       .catch(function () {
         if (isInitial) {
           applyData(FALLBACK_DATA);
+          applyLiveStatusMap(false);
           renderHome();
         } else {
           markUpdatedNow();
@@ -1266,6 +1416,7 @@ var APP_CONFIG = {
     cacheElements();
     bindEvents();
     fetchJobsData(true);
+    initSupabaseLive();
 
     if (refreshTimerId) clearInterval(refreshTimerId);
     refreshTimerId = setInterval(function () {
