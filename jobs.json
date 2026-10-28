@@ -172,6 +172,57 @@
           "download": "https://drive.google.com/uc?export=download&id=1OCQBFJfo0H1Gnnkhqd33TQNjb0c_Qczu"
         }
       ]
+    },
+    {
+      "id": "job-2026-10-28-css-essay-structure-masterclass-v1",
+      "date": "2026-10-28",
+      "topic": "CSS Essay — Structure Masterclass",
+      "type": "Poster",
+      "version": "V1",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "zipDownload": "https://drive.google.com/uc?export=download&id=19khjtm9OXCh1jZFHhl8hq3Q6PlnqNcxi",
+      "slides": [
+        {
+          "name": "Slide 01 — CSS Essay — Structure Masterclass",
+          "thumb": "https://drive.google.com/thumbnail?id=1vBYwuVlOavMmLLxq9WYDvt4dbovLiJl9&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1vBYwuVlOavMmLLxq9WYDvt4dbovLiJl9"
+        }
+      ]
+    },
+    {
+      "id": "job-2026-10-28-css-essay-structure-masterclass-v2",
+      "date": "2026-10-28",
+      "topic": "CSS Essay — Structure Masterclass",
+      "type": "Poster",
+      "version": "V2",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "zipDownload": "https://drive.google.com/uc?export=download&id=19khjtm9OXCh1jZFHhl8hq3Q6PlnqNcxi",
+      "slides": [
+        {
+          "name": "Slide 01 — CSS Essay — Structure Masterclass",
+          "thumb": "https://drive.google.com/thumbnail?id=1TKEpQ0lWygo0wuI5nsKg8KwHauxUJAFi&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1TKEpQ0lWygo0wuI5nsKg8KwHauxUJAFi"
+        }
+      ]
+    },
+    {
+      "id": "job-2026-10-28-css-essay-structure-masterclass-v3",
+      "date": "2026-10-28",
+      "topic": "CSS Essay — Structure Masterclass",
+      "type": "Poster",
+      "version": "V3",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "zipDownload": "https://drive.google.com/uc?export=download&id=19khjtm9OXCh1jZFHhl8hq3Q6PlnqNcxi",
+      "slides": [
+        {
+          "name": "Slide 01 — CSS Essay — Structure Masterclass",
+          "thumb": "https://drive.google.com/thumbnail?id=1J_4cNEstPcGkJs3l-nKBe12mcxg1s6rW&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1J_4cNEstPcGkJs3l-nKBe12mcxg1s6rW"
+        }
+      ]
     }
   ]
 }
