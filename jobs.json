@@ -56,6 +56,57 @@
           "download": "https://drive.google.com/uc?export=download&id=1lUYT1rvzp_qM2IyuovzhkvtgmBClNs1J"
         }
       ]
+    },
+    {
+      "id": "job-2026-10-29-english-essay-competition-rescheduled-v1",
+      "topic": "English Essay Competition — Rescheduled",
+      "type": "Poster",
+      "version": "V1",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1J_36J_Vf5zq9LrA6ZDZ1jNnesWiIbMWH",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=16fpxcYCaYhwa7ibwFV62cOUcb9xKPny_&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=16fpxcYCaYhwa7ibwFV62cOUcb9xKPny_"
+        }
+      ]
+    },
+    {
+      "id": "job-2026-10-29-english-essay-competition-rescheduled-v2",
+      "topic": "English Essay Competition — Rescheduled",
+      "type": "Poster",
+      "version": "V2",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1J_36J_Vf5zq9LrA6ZDZ1jNnesWiIbMWH",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1a8wT8XS7b8-rjMKp_0gboEiOAXYSc48j&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1a8wT8XS7b8-rjMKp_0gboEiOAXYSc48j"
+        }
+      ]
+    },
+    {
+      "id": "job-2026-10-29-english-essay-competition-rescheduled-v3",
+      "topic": "English Essay Competition — Rescheduled",
+      "type": "Poster",
+      "version": "V3",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1J_36J_Vf5zq9LrA6ZDZ1jNnesWiIbMWH",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1aT493N7fp6di_KytT8SSW9xxvhha8-LG&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1aT493N7fp6di_KytT8SSW9xxvhha8-LG"
+        }
+      ]
     }
   ]
 }
