@@ -300,6 +300,60 @@
           "download": "https://drive.google.com/uc?export=download&id=1PiTUn9RY8p6LzrLe2wdIOEdAL50nGJL-"
         }
       ]
+    },
+    {
+      "id": "job-2026-10-29-asf-assistant-director-interview-preparatory-session-v1",
+      "date": "2026-10-29",
+      "topic": "ASF Assistant Director Interview Preparatory Session",
+      "type": "Poster",
+      "version": "V1",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1kswu4GttJpsosYeHEiH9mT1p4CeHT6Hu",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1xEMf_mF69XtXJyQXQue2H9gCHgl3s2KS&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1xEMf_mF69XtXJyQXQue2H9gCHgl3s2KS"
+        }
+      ]
+    },
+    {
+      "id": "job-2026-10-29-asf-assistant-director-interview-preparatory-session-v2",
+      "date": "2026-10-29",
+      "topic": "ASF Assistant Director Interview Preparatory Session",
+      "type": "Poster",
+      "version": "V2",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1kswu4GttJpsosYeHEiH9mT1p4CeHT6Hu",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1VtLKfsNkF0qadRsOkr5VgIu5Ogsz3414&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1VtLKfsNkF0qadRsOkr5VgIu5Ogsz3414"
+        }
+      ]
+    },
+    {
+      "id": "job-2026-10-29-asf-assistant-director-interview-preparatory-session-v3",
+      "date": "2026-10-29",
+      "topic": "ASF Assistant Director Interview Preparatory Session",
+      "type": "Poster",
+      "version": "V3",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1kswu4GttJpsosYeHEiH9mT1p4CeHT6Hu",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1RW64kVwKSiARPRMOZRkRSUxazhHwRkKn&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1RW64kVwKSiARPRMOZRkRSUxazhHwRkKn"
+        }
+      ]
     }
   ]
 }
