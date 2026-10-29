@@ -107,6 +107,23 @@
           "download": "https://drive.google.com/uc?export=download&id=1aT493N7fp6di_KytT8SSW9xxvhha8-LG"
         }
       ]
+    },
+    {
+      "id": "job-2026-10-29-dolce-far-niente-v4",
+      "topic": "Dolce Far Niente — The Sweetness of Doing Nothing",
+      "type": "Poster",
+      "version": "V4",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1n0I569XAOX6EHxZ-Y7oj0UIhGc2B1Fim",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1t8J36c2H5htwovhVPYaTI1OOHWWJIGdZ&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1t8J36c2H5htwovhVPYaTI1OOHWWJIGdZ"
+        }
+      ]
     }
   ]
 }
