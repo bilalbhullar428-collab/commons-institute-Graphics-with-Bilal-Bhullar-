@@ -5,5 +5,57 @@
     "logo": "https://drive.google.com/thumbnail?id=1UXUQy18al4R2d02jDxwlxAyABHR_nuCd&sz=w200",
     "footerText": "The Commons Institute • Bilal Bhullar"
   },
-  "jobs": []
+  "jobs": [
+    {
+      "id": "job-2026-10-29-dolce-far-niente-v1",
+      "topic": "Dolce Far Niente — The Sweetness of Doing Nothing",
+      "type": "Poster",
+      "version": "V1",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=145ZvaUQ4q6kl4pgi4Zj5ytYxC4xwrrOq",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1v1iKMATLEN1r5fCNwOlihBzWkN0b2_Sa&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1v1iKMATLEN1r5fCNwOlihBzWkN0b2_Sa"
+        }
+      ]
+    },
+    {
+      "id": "job-2026-10-29-dolce-far-niente-v2",
+      "topic": "Dolce Far Niente — The Sweetness of Doing Nothing",
+      "type": "Poster",
+      "version": "V2",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=145ZvaUQ4q6kl4pgi4Zj5ytYxC4xwrrOq",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1bWPUa77BdyK6kXR3_PRSFCy3CfIZQoWY&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1bWPUa77BdyK6kXR3_PRSFCy3CfIZQoWY"
+        }
+      ]
+    },
+    {
+      "id": "job-2026-10-29-dolce-far-niente-v3",
+      "topic": "Dolce Far Niente — The Sweetness of Doing Nothing",
+      "type": "Poster",
+      "version": "V3",
+      "status": "awaiting-approval",
+      "slideCount": 1,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=145ZvaUQ4q6kl4pgi4Zj5ytYxC4xwrrOq",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1lUYT1rvzp_qM2IyuovzhkvtgmBClNs1J&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1lUYT1rvzp_qM2IyuovzhkvtgmBClNs1J"
+        }
+      ]
+    }
+  ]
 }
