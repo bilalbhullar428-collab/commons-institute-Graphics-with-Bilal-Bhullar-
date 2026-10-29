@@ -84,6 +84,7 @@ var APP_CONFIG = {
     searchQuery: "",
     typeFilter: "All", // "All" | "Poster" | "Carousel" | "Thumbnail" | "Cover"
     activeJobId: null,
+    activeGroupKey: null,
     activeView: "home", // "home" | "job" | "script"
     lightboxJob: null,
     lightboxSlideIndex: 0,
@@ -467,56 +468,127 @@ var APP_CONFIG = {
     });
   }
 
-  // Build a single job card HTML (used in Awaiting Approval and Pending sections)
-  function buildJobCardHtml(job, refMs) {
-    var slides = Array.isArray(job.slides) ? job.slides : [];
-    var slideCount = job.slideCount || slides.length || 1;
-    var slideText = slideCount === 1 ? "1 slide" : slideCount + " slides";
-    var firstSlide = slides[0] || { thumb: "", download: "", name: job.topic };
-    var isCarousel = String(job.type || "").toLowerCase() === "carousel";
+  // v2.4 — Grouping: one card per topic, versions inside.
+  // The data model stays one entry per version (ChatGPT keeps
+  // appending one entry per version; the bridge + Form + Supabase
+  // all stay per-version). Only the presentation groups: entries
+  // with the same topic (exact spelling, case-insensitive) form
+  // one group. A new version with a matching topic automatically
+  // appears inside its topic — no data change needed.
+  function normalizeTopicKey(topic) {
+    return String(topic || "").trim().replace(/\s+/g, " ").toLowerCase();
+  }
+
+  function versionRank(v) {
+    var m = /^v(\d+)$/i.exec(String(v || "").trim());
+    return m ? parseInt(m[1], 10) : 999;
+  }
+
+  function groupJobs(jobsList) {
+    var groupsByKey = {};
+    var groups = [];
+    for (var i = 0; i < jobsList.length; i++) {
+      var job = jobsList[i];
+      var key = normalizeTopicKey(job.topic);
+      var g = groupsByKey[key];
+      if (!g) {
+        g = { key: key, topic: job.topic || "", versions: [] };
+        groupsByKey[key] = g;
+        groups.push(g);
+      }
+      g.versions.push(job);
+    }
+    for (var k = 0; k < groups.length; k++) {
+      var grp = groups[k];
+      grp.versions.sort(function (a, b) { return versionRank(a.version) - versionRank(b.version); });
+      var latest = grp.versions[grp.versions.length - 1];
+      grp.latest = latest;
+      grp.type = latest.type || grp.versions[0].type || "Poster";
+      grp.date = latest.date || "";
+      var slides = Array.isArray(latest.slides) ? latest.slides : [];
+      grp.thumb = slides[0] ? slides[0] : null;
+      grp.size = latest.size || "";
+      grp.zipDownload = latest.zipDownload || "";
+      if (!grp.zipDownload) {
+        for (var z = 0; z < grp.versions.length; z++) {
+          if (grp.versions[z].zipDownload) { grp.zipDownload = grp.versions[z].zipDownload; break; }
+        }
+      }
+    }
+    return groups;
+  }
+
+  // A group's section follows its LATEST version's status (simple,
+  // predictable; every version's own status is visible inside).
+  function getGroupStatus(group) {
+    return getJobStatus(group.latest);
+  }
+
+  function findGroup(groupKey) {
+    var groups = groupJobs(state.jobs);
+    for (var i = 0; i < groups.length; i++) {
+      if (groups[i].key === groupKey) return groups[i];
+    }
+    return null;
+  }
+
+  function groupKeyForJobId(jobId) {
+    for (var i = 0; i < state.jobs.length; i++) {
+      if (String(state.jobs[i].id) === String(jobId)) return normalizeTopicKey(state.jobs[i].topic);
+    }
+    return null;
+  }
+
+  // Build one topic card (used in Awaiting Approval and Pending sections).
+  // Clean image: no badges on top of the picture — type, version
+  // count, status and Latest live in the meta row below it.
+  function buildGroupCardHtml(group, refMs) {
+    var firstSlide = group.thumb || { thumb: "", download: "", name: group.topic };
+    var isCarousel = String(group.type || "").toLowerCase() === "carousel";
     var badgeClass = isCarousel ? "badge-carousel" : "badge-poster";
-    var status = getJobStatus(job);
+    var status = getGroupStatus(group);
     var statusLabel = getStatusLabel(status);
     var statusBadgeClass = getStatusBadgeClass(status);
-    var latestBadgeHtml = isJobLatest(job.date, refMs)
+    var latestBadgeHtml = isJobLatest(group.date, refMs)
       ? '<span class="badge badge-latest">Latest</span>'
+      : "";
+    var versionText = group.versions.length === 1 ? "1 version" : group.versions.length + " versions";
+    var dateHtml = group.date
+      ? '<div class="card-date">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+            '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>' +
+            '<line x1="16" y1="2" x2="16" y2="6"></line>' +
+            '<line x1="8" y1="2" x2="8" y2="6"></line>' +
+            '<line x1="3" y1="10" x2="21" y2="10"></line>' +
+          '</svg>' +
+          escapeHtml(formatDate(group.date)) +
+        '</div>'
       : "";
 
     return (
-      '<article class="job-card" data-job-id="' + escapeHtml(job.id) + '">' +
-        '<div class="card-thumb-wrap" data-action="open-job" data-job-id="' + escapeHtml(job.id) + '">' +
-          '<div class="card-floating-badges">' +
-            '<div class="badge-group">' +
-              '<span class="badge ' + badgeClass + '">' + escapeHtml(job.type || "Poster") + '</span>' +
-              '<span class="badge badge-version">' + escapeHtml(job.version || "V1") + '</span>' +
-              latestBadgeHtml +
-            '</div>' +
-            '<span class="badge badge-slides">' + escapeHtml(slideText) + '</span>' +
-          '</div>' +
+      '<article class="job-card" data-group-key="' + escapeHtml(group.key) + '">' +
+        '<div class="card-thumb-wrap" data-action="open-group" data-group-key="' + escapeHtml(group.key) + '">' +
           '<img class="card-thumb-img" loading="lazy" data-drive-img="true" ' +
             'src="' + escapeHtml(firstSlide.thumb) + '" ' +
-            'alt="' + escapeHtml(job.topic) + '" ' +
-            'data-label="' + escapeHtml(firstSlide.name || job.topic) + '" />' +
+            'alt="' + escapeHtml(group.topic) + '" ' +
+            'data-label="' + escapeHtml(firstSlide.name || group.topic) + '" />' +
         '</div>' +
         '<div class="card-body">' +
           '<div class="card-meta-row">' +
-            '<span class="card-date">' +
-              '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
-                '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>' +
-                '<line x1="16" y1="2" x2="16" y2="6"></line>' +
-                '<line x1="8" y1="2" x2="8" y2="6"></line>' +
-                '<line x1="3" y1="10" x2="21" y2="10"></line>' +
-              '</svg>' +
-              escapeHtml(formatDate(job.date)) +
+            '<span class="badge-group">' +
+              '<span class="badge ' + badgeClass + '">' + escapeHtml(group.type || "Poster") + '</span>' +
+              '<span class="badge badge-versions">' + escapeHtml(versionText) + '</span>' +
+              latestBadgeHtml +
             '</span>' +
             '<span class="badge ' + statusBadgeClass + '">' + escapeHtml(statusLabel) + '</span>' +
           '</div>' +
-          '<h2 class="card-topic" data-action="open-job" data-job-id="' + escapeHtml(job.id) + '">' +
-            escapeHtml(job.topic) +
+          '<h2 class="card-topic" data-action="open-group" data-group-key="' + escapeHtml(group.key) + '">' +
+            escapeHtml(group.topic) +
           '</h2>' +
+          dateHtml +
           '<div class="card-actions">' +
-            '<button type="button" class="btn btn-primary" data-action="open-job" data-job-id="' + escapeHtml(job.id) + '">' +
-              '<span>View + Download</span>' +
+            '<button type="button" class="btn btn-primary" data-action="open-group" data-group-key="' + escapeHtml(group.key) + '">' +
+              '<span>View Versions</span>' +
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">' +
                 '<line x1="5" y1="12" x2="19" y2="12"></line>' +
                 '<polyline points="12 5 19 12 12 19"></polyline>' +
@@ -528,19 +600,19 @@ var APP_CONFIG = {
     );
   }
 
-  // Build compact list HTML (used in Approved & Delivered sections — job names only, newest first)
-  function buildCompactListHtml(jobsList, refMs) {
+  // Build compact list HTML (used in Approved & Delivered sections — topic names only, newest first)
+  function buildCompactListHtml(groupsList, refMs) {
     var itemsHtml = "";
-    for (var i = 0; i < jobsList.length; i++) {
-      var job = jobsList[i];
-      var latestHtml = isJobLatest(job.date, refMs)
+    for (var i = 0; i < groupsList.length; i++) {
+      var group = groupsList[i];
+      var latestHtml = isJobLatest(group.date, refMs)
         ? '<span class="badge badge-latest">Latest</span>'
         : "";
       itemsHtml +=
         '<li class="compact-job-item">' +
-          '<button type="button" class="compact-job-btn" data-action="open-job" data-job-id="' + escapeHtml(job.id) + '">' +
+          '<button type="button" class="compact-job-btn" data-action="open-group" data-group-key="' + escapeHtml(group.key) + '">' +
             '<span class="compact-job-name-wrap">' +
-              '<span class="compact-job-name">' + escapeHtml(job.topic) + '</span>' +
+              '<span class="compact-job-name">' + escapeHtml(group.topic) + '</span>' +
               latestHtml +
             '</span>' +
             '<span class="compact-job-arrow" aria-hidden="true">' +
@@ -554,21 +626,24 @@ var APP_CONFIG = {
     return '<ul class="compact-job-list">' + itemsHtml + '</ul>';
   }
 
-  // Render the 4 ordered status sections for a given subset of jobs
-  // Exact order required: (a) Awaiting approval, (b) Pending, (c) Approved — compact list, job names only, (d) Delivered — compact list, job names only
-  function buildFourSectionsHtml(jobsList, refMs, showEmptySections) {
+  // Render the 4 ordered status sections for a given subset of topic
+  // groups. Exact order required: (a) Awaiting approval, (b) Pending,
+  // (c) Approved — compact list, topic names only, (d) Delivered —
+  // compact list, topic names only. Section counts are topic counts;
+  // the dashboard strip still counts versions (files).
+  function buildFourSectionsHtml(groupsList, refMs, showEmptySections) {
     var awaitingList = [];
     var pendingList = [];
     var approvedList = [];
     var deliveredList = [];
 
-    for (var i = 0; i < jobsList.length; i++) {
-      var j = jobsList[i];
-      var st = getJobStatus(j);
-      if (st === "pending") pendingList.push(j);
-      else if (st === "approved") approvedList.push(j);
-      else if (st === "delivered") deliveredList.push(j);
-      else awaitingList.push(j);
+    for (var i = 0; i < groupsList.length; i++) {
+      var g = groupsList[i];
+      var st = getGroupStatus(g);
+      if (st === "pending") pendingList.push(g);
+      else if (st === "approved") approvedList.push(g);
+      else if (st === "delivered") deliveredList.push(g);
+      else awaitingList.push(g);
     }
 
     var sections = [
@@ -620,7 +695,7 @@ var APP_CONFIG = {
       } else {
         var cardsHtml = "";
         for (var c = 0; c < sec.list.length; c++) {
-          cardsHtml += buildJobCardHtml(sec.list[c], refMs);
+          cardsHtml += buildGroupCardHtml(sec.list[c], refMs);
         }
         html += '<div class="jobs-grid">' + cardsHtml + '</div>';
       }
@@ -632,9 +707,12 @@ var APP_CONFIG = {
   }
 
   // Render Home View (Organized Sections + Collapsible Past Months)
+  // Home shows one card per TOPIC; versions live inside the topic.
   function renderHome() {
     var filtered = getFilteredJobs();
     var total = state.jobs.length;
+    var groups = groupJobs(filtered);
+    var totalGroups = groupJobs(state.jobs).length;
 
     if (els.clearSearchBtn) {
       els.clearSearchBtn.style.display = state.searchQuery.length > 0 ? "inline-flex" : "none";
@@ -642,13 +720,13 @@ var APP_CONFIG = {
 
     if (els.resultsSummary) {
       if (state.searchQuery || state.typeFilter !== "All") {
-        els.resultsSummary.textContent = "Showing " + filtered.length + " of " + total + " jobs";
+        els.resultsSummary.textContent = "Showing " + groups.length + " topics (" + filtered.length + " versions) of " + totalGroups + " topics";
       } else {
-        els.resultsSummary.textContent = "Showing all " + total + " jobs (newest first)";
+        els.resultsSummary.textContent = "Showing all " + totalGroups + " topics (" + total + " versions, newest first)";
       }
     }
 
-    if (filtered.length === 0) {
+    if (groups.length === 0) {
       els.jobsGrid.className = "";
       els.jobsGrid.innerHTML =
         '<div class="empty-state">' +
@@ -660,31 +738,31 @@ var APP_CONFIG = {
 
     var refMs = getReferenceTimestamp();
 
-    // Determine active month (the YYYY-MM of the newest job) so older months collapse cleanly under "Past months"
-    var newestMonth = getYearMonth(filtered[0] && filtered[0].date);
-    var currentMonthJobs = [];
-    var pastMonthsJobs = [];
+    // Determine active month (the YYYY-MM of the newest topic) so older months collapse cleanly under "Past months"
+    var newestMonth = getYearMonth(groups[0] && groups[0].date);
+    var currentMonthGroups = [];
+    var pastMonthsGroups = [];
 
-    for (var i = 0; i < filtered.length; i++) {
-      var ym = getYearMonth(filtered[i].date);
+    for (var i = 0; i < groups.length; i++) {
+      var ym = getYearMonth(groups[i].date);
       if (!newestMonth || ym === newestMonth) {
-        currentMonthJobs.push(filtered[i]);
+        currentMonthGroups.push(groups[i]);
       } else {
-        pastMonthsJobs.push(filtered[i]);
+        pastMonthsGroups.push(groups[i]);
       }
     }
 
-    var outHtml = buildFourSectionsHtml(currentMonthJobs, refMs, true);
+    var outHtml = buildFourSectionsHtml(currentMonthGroups, refMs, true);
 
-    if (pastMonthsJobs.length > 0) {
+    if (pastMonthsGroups.length > 0) {
       outHtml +=
         '<details class="past-months-details" style="margin-top: 1.5rem;">' +
           '<summary class="past-months-summary">' +
-            '<span>Past months (' + pastMonthsJobs.length + (pastMonthsJobs.length === 1 ? ' older job' : ' older jobs') + ')</span>' +
+            '<span>Past months (' + pastMonthsGroups.length + (pastMonthsGroups.length === 1 ? ' older topic' : ' older topics') + ')</span>' +
             '<span style="font-size: 0.8rem; color: var(--text-muted);">Tap to expand</span>' +
           '</summary>' +
           '<div class="past-months-body">' +
-            buildFourSectionsHtml(pastMonthsJobs, refMs, false) +
+            buildFourSectionsHtml(pastMonthsGroups, refMs, false) +
           '</div>' +
         '</details>';
     }
@@ -694,40 +772,32 @@ var APP_CONFIG = {
     wireImageFallbacks(els.jobsGrid);
   }
 
-  // Open a specific job's detail view (with Approve button + Comment box)
-  function openJobView(jobId) {
-    var job = null;
-    for (var i = 0; i < state.jobs.length; i++) {
-      if (String(state.jobs[i].id) === String(jobId)) {
-        job = state.jobs[i];
-        break;
-      }
-    }
-    if (!job) return;
+  // Open a topic's detail view (v2.4): the topic header + one
+  // section per version, each with its own slides, status and
+  // Approve button. Approval stays per-version — the client picks
+  // the version they like and approves that one.
+  function openGroupView(groupKey) {
+    var group = findGroup(groupKey);
+    if (!group) return;
 
-    state.activeJobId = job.id;
+    state.activeGroupKey = group.key;
     state.activeView = "job";
     els.homeView.hidden = true;
     if (els.scriptView) els.scriptView.hidden = true;
     els.jobView.hidden = false;
 
-    var slides = Array.isArray(job.slides) ? job.slides : [];
-    var slideCount = job.slideCount || slides.length || 1;
-    var slideText = slideCount === 1 ? "1 slide" : slideCount + " slides";
-    var isCarousel = String(job.type || "").toLowerCase() === "carousel";
-    var badgeClass = isCarousel ? "badge-carousel" : "badge-poster";
-    var status = getJobStatus(job);
-    var statusLabel = getStatusLabel(status);
-    var statusBadgeClass = getStatusBadgeClass(status);
     var refMs = getReferenceTimestamp();
-    var latestBadgeHtml = isJobLatest(job.date, refMs)
+    var isCarousel = String(group.type || "").toLowerCase() === "carousel";
+    var badgeClass = isCarousel ? "badge-carousel" : "badge-poster";
+    var latestBadgeHtml = isJobLatest(group.date, refMs)
       ? '<span class="badge badge-latest">Latest</span>'
       : "";
+    var versionText = group.versions.length === 1 ? "1 version" : group.versions.length + " versions";
 
     var zipButtonHtml = "";
-    if (job.zipDownload) {
+    if (group.zipDownload) {
       zipButtonHtml =
-        '<a class="btn btn-outline" href="' + escapeHtml(job.zipDownload) + '" target="_blank" rel="noopener noreferrer" download>' +
+        '<a class="btn btn-outline" href="' + escapeHtml(group.zipDownload) + '" target="_blank" rel="noopener noreferrer" download>' +
           '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
             '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>' +
             '<polyline points="7 10 12 15 17 10"></polyline>' +
@@ -737,78 +807,112 @@ var APP_CONFIG = {
         '</a>';
     }
 
+    var dateMetaHtml = group.date
+      ? '<span><strong>Date:</strong> ' + escapeHtml(formatDate(group.date)) + ' (' + escapeHtml(group.date) + ')</span>'
+      : "";
+
+    var actionsRowHtml = zipButtonHtml
+      ? '<div class="job-detail-actions-row">' + zipButtonHtml + '</div>'
+      : "";
+
     els.jobHeaderContainer.innerHTML =
       '<div class="job-detail-header">' +
         '<div class="job-detail-badges">' +
-          '<span class="badge ' + badgeClass + '">' + escapeHtml(job.type || "Poster") + '</span>' +
-          '<span class="badge badge-version">' + escapeHtml(job.version || "V1") + '</span>' +
-          '<span class="badge badge-slides">' + escapeHtml(slideText) + '</span>' +
-          '<span class="badge ' + statusBadgeClass + '">' + escapeHtml(statusLabel) + '</span>' +
+          '<span class="badge ' + badgeClass + '">' + escapeHtml(group.type || "Poster") + '</span>' +
+          '<span class="badge badge-versions">' + escapeHtml(versionText) + '</span>' +
+          (group.size ? '<span class="badge badge-version">' + escapeHtml(group.size) + '</span>' : "") +
           latestBadgeHtml +
         '</div>' +
-        '<h1 class="job-detail-title">' + escapeHtml(job.topic) + '</h1>' +
+        '<h1 class="job-detail-title">' + escapeHtml(group.topic) + '</h1>' +
         '<div class="job-detail-meta">' +
-          '<span><strong>Date:</strong> ' + escapeHtml(formatDate(job.date)) + ' (' + escapeHtml(job.date) + ')</span>' +
+          dateMetaHtml +
           '<span>Tap any slide to inspect full screen or download original HD quality</span>' +
         '</div>' +
-        '<div class="job-detail-actions-row">' +
-          '<button type="button" id="approveJobBtn" class="btn btn-green" data-action="approve-job" data-job-id="' + escapeHtml(job.id) + '">' +
-            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
-              '<polyline points="20 6 9 17 4 12"></polyline>' +
-            '</svg>' +
-            '<span>Approve Design</span>' +
-          '</button>' +
-          zipButtonHtml +
-        '</div>' +
+        actionsRowHtml +
         '<div id="approveFeedbackBanner" hidden></div>' +
       '</div>';
 
-    var slidesHtml = "";
-    for (var s = 0; s < slides.length; s++) {
-      var slide = slides[s];
-      var numLabel = "Slide " + (s + 1) + " of " + slides.length;
-      slidesHtml +=
-        '<div class="slide-card">' +
-          '<div class="slide-thumb-wrap" data-action="open-lightbox" data-slide-index="' + s + '">' +
-            '<span class="slide-number-pill">' + escapeHtml(numLabel) + '</span>' +
-            '<span class="slide-zoom-hint">' +
-              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">' +
-                '<circle cx="11" cy="11" r="8"></circle>' +
-                '<line x1="21" y1="21" x2="16.65" y2="16.65"></line>' +
-                '<line x1="11" y1="8" x2="11" y2="14"></line>' +
-                '<line x1="8" y1="11" x2="14" y2="11"></line>' +
-              '</svg>' +
-              'Tap to View' +
-            '</span>' +
-            '<img class="card-thumb-img" loading="lazy" data-drive-img="true" ' +
-              'src="' + escapeHtml(slide.thumb) + '" ' +
-              'alt="' + escapeHtml(slide.name) + '" ' +
-              'data-label="' + escapeHtml(slide.name) + '" />' +
-          '</div>' +
-          '<div class="slide-info">' +
-            '<div class="slide-name">' + escapeHtml(slide.name) + '</div>' +
-            '<div class="slide-actions">' +
-              '<button type="button" class="btn btn-outline" style="flex:1;" data-action="open-lightbox" data-slide-index="' + s + '">' +
-                'Full Screen' +
-              '</button>' +
-              '<a class="btn btn-maroon" style="flex:1;" href="' + escapeHtml(slide.download) + '" target="_blank" rel="noopener noreferrer" download>' +
-                '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">' +
-                  '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>' +
-                  '<polyline points="7 10 12 15 17 10"></polyline>' +
-                  '<line x1="12" y1="15" x2="12" y2="3"></line>' +
-                '</svg>' +
-                '<span>Download HD</span>' +
-              '</a>' +
+    var versionsHtml = "";
+    for (var v = 0; v < group.versions.length; v++) {
+      var job = group.versions[v];
+      var slides = Array.isArray(job.slides) ? job.slides : [];
+      var slideCount = job.slideCount || slides.length || 1;
+      var slideText = slideCount === 1 ? "1 slide" : slideCount + " slides";
+      var status = getJobStatus(job);
+      var statusLabel = getStatusLabel(status);
+      var statusBadgeClass = getStatusBadgeClass(status);
+      var approveHtml = "";
+      if (status === "approved") {
+        approveHtml = '<span class="badge badge-status-approved">Approved ✓</span>';
+      } else {
+        approveHtml =
+          '<button type="button" class="btn btn-green" data-action="approve-job" data-job-id="' + escapeHtml(job.id) + '">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
+              '<polyline points="20 6 9 17 4 12"></polyline>' +
+            '</svg>' +
+            '<span>Approve This Version</span>' +
+          '</button>';
+      }
+
+      var slidesHtml = "";
+      for (var s = 0; s < slides.length; s++) {
+        var slide = slides[s];
+        var numLabel = "Slide " + (s + 1) + " of " + slides.length;
+        slidesHtml +=
+          '<div class="slide-card">' +
+            '<div class="slide-thumb-wrap" data-action="open-lightbox" data-slide-index="' + s + '" data-job-id="' + escapeHtml(job.id) + '">' +
+              '<img class="card-thumb-img" loading="lazy" data-drive-img="true" ' +
+                'src="' + escapeHtml(slide.thumb) + '" ' +
+                'alt="' + escapeHtml(slide.name) + '" ' +
+                'data-label="' + escapeHtml(slide.name) + '" />' +
             '</div>' +
+            '<div class="slide-info">' +
+              '<div class="slide-position">' + escapeHtml(numLabel) + '</div>' +
+              '<div class="slide-name">' + escapeHtml(slide.name) + '</div>' +
+              '<div class="slide-actions">' +
+                '<button type="button" class="btn btn-outline" style="flex:1;" data-action="open-lightbox" data-slide-index="' + s + '" data-job-id="' + escapeHtml(job.id) + '">' +
+                  'Full Screen' +
+                '</button>' +
+                '<a class="btn btn-maroon" style="flex:1;" href="' + escapeHtml(slide.download) + '" target="_blank" rel="noopener noreferrer" download>' +
+                  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">' +
+                    '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>' +
+                    '<polyline points="7 10 12 15 17 10"></polyline>' +
+                    '<line x1="12" y1="15" x2="12" y2="3"></line>' +
+                  '</svg>' +
+                  '<span>Download HD</span>' +
+                '</a>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      }
+
+      versionsHtml +=
+        '<section class="version-section">' +
+          '<div class="version-section-head">' +
+            '<h2 class="version-section-title">' + escapeHtml(job.version || "V1") + '</h2>' +
+            (job.size ? '<span class="badge badge-version">' + escapeHtml(job.size) + '</span>' : "") +
+            '<span class="badge badge-slides">' + escapeHtml(slideText) + '</span>' +
+            '<span class="badge ' + statusBadgeClass + '">' + escapeHtml(statusLabel) + '</span>' +
+            '<span style="margin-left:auto;">' + approveHtml + '</span>' +
           '</div>' +
-        '</div>';
+          '<div class="version-slides">' + slidesHtml + '</div>' +
+        '</section>';
     }
 
-    els.slidesGrid.innerHTML = slidesHtml;
+    els.slidesGrid.innerHTML = versionsHtml;
     wireImageFallbacks(els.slidesGrid);
 
-    // Feature 5: Render Comment Box for this job
+    // Feature 5: one Comment Box for the topic, with a version picker
+    // (the comment is recorded against the chosen version).
     if (els.jobFeedbackContainer) {
+      var versionOptionsHtml = "";
+      for (var w = 0; w < group.versions.length; w++) {
+        var vj = group.versions[w];
+        versionOptionsHtml +=
+          '<option value="' + escapeHtml(vj.id) + '"' + (vj === group.latest ? ' selected' : '') + '>' +
+            escapeHtml(vj.version || "V1") + ' — ' + escapeHtml(getStatusLabel(getJobStatus(vj))) +
+          '</option>';
+      }
       els.jobFeedbackContainer.innerHTML =
         '<div class="panel-card">' +
           '<h2 class="panel-title">' +
@@ -817,8 +921,12 @@ var APP_CONFIG = {
             '</svg>' +
             '<span>Leave a Revision Note or Comment</span>' +
           '</h2>' +
-          '<p class="panel-desc">Send feedback on <strong>' + escapeHtml(job.topic) + ' (' + escapeHtml(job.version || "V1") + ')</strong>. No login required.</p>' +
-          '<form id="jobCommentForm" data-job-id="' + escapeHtml(job.id) + '" novalidate>' +
+          '<p class="panel-desc">Send feedback on <strong>' + escapeHtml(group.topic) + '</strong>. Choose the version your comment is about. No login required.</p>' +
+          '<form id="jobCommentForm" data-job-id="' + escapeHtml(group.latest.id) + '" novalidate>' +
+            '<div class="form-group" style="margin-bottom: 0.75rem;">' +
+              '<label class="form-label" for="commentVersionSelect">Version *</label>' +
+              '<select id="commentVersionSelect" class="form-input">' + versionOptionsHtml + '</select>' +
+            '</div>' +
             '<div class="form-group" style="margin-bottom: 0.75rem;">' +
               '<label class="form-label" for="commentAuthorInput">Your Name (optional)</label>' +
               '<input type="text" id="commentAuthorInput" class="form-input" placeholder="e.g., Faculty Member / Reviewer" />' +
@@ -870,7 +978,7 @@ var APP_CONFIG = {
           job.status = "approved";
           if (state.lightboxJob && String(state.lightboxJob.id) === String(job.id)) renderLightboxSlide();
           if (state.activeView === "home") renderHome();
-          else if (state.activeView === "job") openJobView(job.id);
+          else if (state.activeView === "job") openGroupView(state.activeGroupKey);
         }
         copyTextToClipboard(copySummary, function () {
           var banner = document.getElementById("approveFeedbackBanner");
@@ -895,6 +1003,8 @@ var APP_CONFIG = {
     e.preventDefault();
     var form = e.target;
     var jobId = form.getAttribute("data-job-id");
+    var versionSelect = document.getElementById("commentVersionSelect");
+    if (versionSelect && versionSelect.value) jobId = versionSelect.value;
     var job = null;
     for (var i = 0; i < state.jobs.length; i++) {
       if (String(state.jobs[i].id) === String(jobId)) {
@@ -956,6 +1066,7 @@ var APP_CONFIG = {
   // Feature 6: Open "Submit New Script" View
   function openScriptView() {
     state.activeJobId = null;
+    state.activeGroupKey = null;
     state.activeView = "script";
     els.homeView.hidden = true;
     els.jobView.hidden = true;
@@ -1029,6 +1140,7 @@ var APP_CONFIG = {
 
   function closeJobView() {
     state.activeJobId = null;
+    state.activeGroupKey = null;
     state.activeView = "home";
     els.jobView.hidden = true;
     if (els.scriptView) els.scriptView.hidden = true;
@@ -1094,7 +1206,7 @@ var APP_CONFIG = {
     els.lightboxSlideTitle.textContent = slide.name || ("Slide " + (idx + 1));
     els.lightboxSlideSub.textContent = job.topic + " • " + job.type + " (" + job.version + ")" + (job.size ? " • " + job.size : "");
     if (els.lightboxStatusLine) {
-      els.lightboxStatusLine.textContent = "Slide " + (idx + 1) + " of " + slides.length + " • " + getStatusLabel(getJobStatus(job.status));
+      els.lightboxStatusLine.textContent = "Slide " + (idx + 1) + " of " + slides.length + " • " + getStatusLabel(getJobStatus(job));
     }
     if (els.lightboxDownloadBtn) els.lightboxDownloadBtn.setAttribute("href", slide.download);
     if (els.lightboxApproveBtn) {
@@ -1199,10 +1311,9 @@ var APP_CONFIG = {
 
     if (els.jobsGrid) {
       els.jobsGrid.addEventListener("click", function (e) {
-        var target = e.target.closest("[data-action='open-job']");
+        var target = e.target.closest("[data-action='open-group']");
         if (target) {
-          var jobId = target.getAttribute("data-job-id");
-          openJobView(jobId);
+          openGroupView(target.getAttribute("data-group-key"));
         }
       });
     }
@@ -1239,8 +1350,15 @@ var APP_CONFIG = {
 
     if (els.slidesGrid) {
       els.slidesGrid.addEventListener("click", function (e) {
+        var approveBtn = e.target.closest("[data-action='approve-job']");
+        if (approveBtn) {
+          handleApproveJob(approveBtn.getAttribute("data-job-id"));
+          return;
+        }
         var target = e.target.closest("[data-action='open-lightbox']");
         if (target) {
+          var vid = target.getAttribute("data-job-id");
+          if (vid) state.activeJobId = vid;
           var idx = parseInt(target.getAttribute("data-slide-index"), 10) || 0;
           openLightbox(idx);
         }
@@ -1270,7 +1388,9 @@ var APP_CONFIG = {
         var job = state.lightboxJob;
         closeLightbox();
         if (job) {
-          openJobView(job.id);
+          openGroupView(groupKeyForJobId(job.id));
+          var sel = document.getElementById("commentVersionSelect");
+          if (sel) sel.value = job.id;
           var nameInput = document.getElementById("commentAuthorInput");
           if (nameInput && nameInput.focus) nameInput.focus();
         }
@@ -1349,7 +1469,8 @@ var APP_CONFIG = {
     }
     if (changed && render) {
       if (state.activeView === "home") renderHome();
-      else if (state.lightboxJob) renderLightboxSlide();
+      if (state.activeView === "job") openGroupView(state.activeGroupKey);
+      if (state.lightboxJob) renderLightboxSlide();
       markUpdatedNow();
     }
     return changed;

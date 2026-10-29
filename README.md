@@ -223,3 +223,38 @@ https://bilalbhullar428-collab.github.io/commons-institute-Graphics-with-Bilal-B
   description text was updated to name all four types.
 - Muse updates jobs.json `size` only via the pakka prompt route;
   ChatGPT never touches scripts.json or past-jobs.json.
+
+## v2.4 — One card per topic, versions inside (grouped home)
+- Home now shows ONE card per topic (unwan), not one card per
+  version. The 6 live entries (Dolce x3, English Essay x3)
+  collapse to 2 topic cards. Clicking a topic opens its detail
+  view: one section per version (V1, V2, V3, ... up to 8+),
+  each with its own slides, size, status, View/Download and its
+  own "Approve This Version" button. Approval stays per-version
+  (the client approves the version they like); an approved
+  version shows "Approved ✓" instead of a button. One Comment
+  Box per topic with a version picker (the comment is recorded
+  against the chosen version); the lightbox Comment button jumps
+  to the topic and pre-selects that version.
+- Grouping rule: entries with the same topic (case-insensitive,
+  extra spaces ignored) form one group; versions sort V1..Vn;
+  a group's home section follows its LATEST version's status.
+  The card image is the latest version's first slide.
+- NO data-model change: jobs.json stays one entry per version,
+  so ChatGPT, the Form, the bridge and Supabase all work
+  unchanged. A new version with a matching topic name appears
+  inside its topic automatically (pakka prompt now carries the
+  topic-must-match rule). Dashboard counts still count versions
+  (files); home section counts count topics; the results line
+  shows both ("2 topics (6 versions)").
+- Clean images (default IG/carousel card, refined): home cards
+  no longer overlay badges on the picture — type, version count,
+  status and Latest live in the meta row below. Detail slides
+  likewise lost their on-image number pill and "Tap to View"
+  hint (the slide position now sits under the image; Full Screen
+  + Download HD buttons were already there).
+- Also fixed: the lightbox status line passed job.status instead
+  of the job object to getJobStatus, so it always read "Awaiting
+  Approval" — now it shows the version's real status.
+- Muse updates jobs.json grouping only via this code; ChatGPT
+  never touches grouping, scripts.json or past-jobs.json.
