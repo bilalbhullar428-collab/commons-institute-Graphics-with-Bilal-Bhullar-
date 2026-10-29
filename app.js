@@ -82,7 +82,7 @@ var APP_CONFIG = {
     scripts: [],
     pastJobs: [],
     searchQuery: "",
-    typeFilter: "All", // "All" | "Poster" | "Carousel"
+    typeFilter: "All", // "All" | "Poster" | "Carousel" | "Thumbnail" | "Cover"
     activeJobId: null,
     activeView: "home", // "home" | "job" | "script"
     lightboxJob: null,
@@ -979,7 +979,7 @@ var APP_CONFIG = {
       if (banner) {
         banner.className = "feedback-banner warning";
         banner.hidden = false;
-        banner.innerHTML = '<div>Please enter the topic, choose Poster or Carousel, and enter the script text before submitting.</div>';
+        banner.innerHTML = '<div>Please enter the topic, choose a type, and enter the script text before submitting.</div>';
       }
       if (!topicVal && els.newScriptTopic) els.newScriptTopic.focus();
       else if (!typeVal && els.newScriptType) els.newScriptType.focus();
@@ -1092,7 +1092,7 @@ var APP_CONFIG = {
     // Caption keeps every previous detail: slide name, topic • type (version),
     // status, and slide position — plus real actions (no fake engagement).
     els.lightboxSlideTitle.textContent = slide.name || ("Slide " + (idx + 1));
-    els.lightboxSlideSub.textContent = job.topic + " • " + job.type + " (" + job.version + ")";
+    els.lightboxSlideSub.textContent = job.topic + " • " + job.type + " (" + job.version + ")" + (job.size ? " • " + job.size : "");
     if (els.lightboxStatusLine) {
       els.lightboxStatusLine.textContent = "Slide " + (idx + 1) + " of " + slides.length + " • " + getStatusLabel(getJobStatus(job.status));
     }

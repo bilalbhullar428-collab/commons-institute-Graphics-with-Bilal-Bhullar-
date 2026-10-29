@@ -76,6 +76,8 @@
             <button type="button" class="filter-btn active" data-filter="All">All</button>
             <button type="button" class="filter-btn" data-filter="Poster">Posters</button>
             <button type="button" class="filter-btn" data-filter="Carousel">Carousels</button>
+            <button type="button" class="filter-btn" data-filter="Thumbnail">Thumbnails</button>
+            <button type="button" class="filter-btn" data-filter="Cover">Covers</button>
           </div>
           <div id="resultsSummary" class="results-summary">Showing all jobs</div>
         </div>
@@ -148,9 +150,11 @@
             <div class="form-group" style="margin-bottom: 0.8rem;">
               <label class="form-label" for="newScriptType">Type (required) *</label>
               <select id="newScriptType" class="form-select" required>
-                <option value="">Choose Poster or Carousel...</option>
+                <option value="">Choose type...</option>
                 <option value="Poster">Poster</option>
                 <option value="Carousel">Carousel</option>
+                <option value="Thumbnail">Thumbnail</option>
+                <option value="Cover">Cover</option>
               </select>
             </div>
 
@@ -170,7 +174,7 @@
                 id="newScriptComment"
                 class="form-textarea"
                 style="min-height: 76px;"
-                placeholder="Optional notes (e.g., Poster or 6-slide Carousel, preferred color emphasis, target batch date)..."
+                placeholder="Optional notes (e.g., Poster, Thumbnail, Cover, or 6-slide Carousel, preferred color emphasis, target batch date)..."
               ></textarea>
             </div>
 

@@ -196,3 +196,30 @@ https://bilalbhullar428-collab.github.io/commons-institute-Graphics-with-Bilal-B
 - How Muse updates them: a real script arriving in the Responses Sheet (Comment/Script filled, no Job ID) -> append {topic, type, date} to scripts.json. A past WhatsApp job -> append {name, date} to past-jobs.json ONLY on Bilal's instruction. Neither file is ever touched by ChatGPT (the pakka prompt only appends job entries to jobs.json).
 - FALLBACK_DATA jobs emptied: with jobs.json clean, a failed fetch must never resurrect a test job.
 - Header crest still uses the proven 428-Drive thumbnail (veo3 logo thumbnail not yet proven to serve) — switch only after a proven veo3 thumbnail check.
+
+## v2.3 — Types: Thumbnail + Cover, standard sizes, size-aware display
+- New job types: Thumbnail and Cover, alongside Poster and Carousel.
+  Filter pills: All / Posters / Carousels / Thumbnails / Covers.
+  New Script form Type select: Poster / Carousel / Thumbnail / Cover.
+- Dashboard counting rule (unchanged code, now explicit): every
+  NON-Carousel job counts as a Poster — so single-image jobs
+  (Poster, Thumbnail, Cover, any future single-image type) are
+  summed under "Posters". Carousels count only type == Carousel.
+- Standard sizes (built once; script overrides defaults):
+  Poster 1080×1350 (4:5); Carousel slide 1080×1350; Thumbnail
+  1280×720 (16:9); Cover 820×312 (Facebook cover; other platforms
+  use the script size); Square post 1080×1080; Story/Status
+  1080×1920 (9:16). The pakka prompt carries this table; ChatGPT
+  records the job's actual size in the jobs.json `size` field.
+- Size-aware display: job cards now use object-fit: contain (was
+  cover), so every design shows FULLY in its own shape instead of
+  being cropped to the 4:3 card frame (cream letterbox bars fill
+  the rest). Lightbox already used contain (no crop). The lightbox
+  subtitle now shows the size when the job carries one
+  ("topic • Type (V1) • 1280×720"); jobs without `size` render
+  exactly as before.
+- Google Form note: the Form's "Type" question is a TEXT question,
+  so Thumbnail/Cover values submit with no Form change; only its
+  description text was updated to name all four types.
+- Muse updates jobs.json `size` only via the pakka prompt route;
+  ChatGPT never touches scripts.json or past-jobs.json.
