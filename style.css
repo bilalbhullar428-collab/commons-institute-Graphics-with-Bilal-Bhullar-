@@ -1682,6 +1682,44 @@ body {
   align-items: center;
 }
 
+/* v2.5.1 — NARROW-SCREEN FIX (Bilal's phone screenshots, 30 Oct):
+   the desktop flex ROW squeezed the title to a sliver on phones
+   because .topic-row-sub refused to shrink (flex-shrink: 0), so
+   badges and meta text painted across the title — unprofessional.
+   On phones the row becomes a GRID stack instead: row 1 = title +
+   arrow, row 2 = full-width meta that wraps cleanly. Nothing
+   overlaps, nothing squeezes. Desktop (wide) layout is untouched. */
+.topic-row-name {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 640px) {
+  .topic-row-btn {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "main arrow"
+      "sub sub";
+    row-gap: 0.45rem;
+    align-items: center;
+  }
+
+  .topic-row-main {
+    grid-area: main;
+    min-width: 0;
+  }
+
+  .topic-row-sub {
+    grid-area: sub;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  .topic-row-arrow {
+    grid-area: arrow;
+  }
+}
+
 /* History date filter + date groups (Approved / Delivered). */
 .history-filter-bar {
   display: flex;

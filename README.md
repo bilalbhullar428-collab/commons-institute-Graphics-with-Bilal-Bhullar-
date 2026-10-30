@@ -317,3 +317,16 @@ https://bilalbhullar428-collab.github.io/commons-institute-Graphics-with-Bilal-B
   Bilal did not just press it, the client did. Updating the
   bridge needs a fresh MailApp authorization (run
   authorizeEmailOnce() once after pasting).
+
+## v2.5.1 (30 Oct 2026) — mobile row fix
+- Bilal's phone screenshots showed the v2.5 home topic rows
+  OVERLAPPING on narrow screens (badges painted across titles)
+  while desktop looked fine. Cause: the desktop flex ROW with
+  .topic-row-sub refusing to shrink (flex-shrink: 0) squeezed
+  the title to a sliver on phones. The node harness had checked
+  content, not pixels — that gap is owned, not excused.
+- Fix (CSS only, desktop untouched): below 640px the row becomes
+  a GRID stack — row 1 = title + arrow, row 2 = full-width meta
+  that wraps cleanly. Titles also get overflow-wrap: break-word.
+  Verified on the live site at phone width after this push (see
+  plan §67).
