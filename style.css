@@ -1612,3 +1612,172 @@ body {
   color: var(--text-muted);
   font-weight: 600;
 }
+
+/* ============ v2.5: home title lists, history, version lists ============ */
+
+/* Home topic rows: clean title lines, no images. */
+.topic-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.topic-row-item {
+  list-style: none;
+}
+
+.topic-row-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  background: var(--cream-surface);
+  border: 1px solid var(--cream-border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(26, 43, 74, 0.06);
+}
+
+.topic-row-main {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.topic-row-check {
+  color: var(--green-ok);
+  font-weight: 900;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+.topic-row-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.35;
+}
+
+.topic-row-sub {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.topic-row-arrow {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* History date filter + date groups (Approved / Delivered). */
+.history-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  background: var(--cream-surface);
+  border: 1px solid var(--cream-border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.history-date-group {
+  margin-bottom: 1.25rem;
+}
+
+.history-date-group:last-child {
+  margin-bottom: 0;
+}
+
+.history-date-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 0.6rem;
+}
+
+/* "Not selected": soft grey, dignified — never a cross, never red. */
+.badge-status-notselected {
+  background: #f0efe9;
+  color: #7a7a72;
+  border: 1px solid #e2e0d6;
+}
+
+/* Carousel version-name list (detail view, before the lightbox). */
+.version-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.version-row {
+  list-style: none;
+  background: var(--cream-surface);
+  border: 1px solid var(--cream-border);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  box-shadow: 0 1px 4px rgba(26, 43, 74, 0.06);
+}
+
+.version-row-main {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.version-row-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.35;
+}
+
+.version-row-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.version-row-badges {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.version-row-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Compact button size for list-line actions. */
+.btn-sm {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  border-radius: 8px;
+}

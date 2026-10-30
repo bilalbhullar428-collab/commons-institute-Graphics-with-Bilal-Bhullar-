@@ -258,3 +258,62 @@ https://bilalbhullar428-collab.github.io/commons-institute-Graphics-with-Bilal-B
   Approval" — now it shows the version's real status.
 - Muse updates jobs.json grouping only via this code; ChatGPT
   never touches grouping, scripts.json or past-jobs.json.
+
+## v2.5 (30 Oct 2026) — title-list home, fixed approved-0, history
+- DIAGNOSIS of the approved-0 report (30 Oct morning): the
+  Form -> Sheet -> bridge -> Supabase pipeline was HEALTHY
+  (both approvals landed in Supabase within 1 second). The bug
+  was display-side, two rules: (a) v2.4's "group section = latest
+  version's status" kept an approved topic in Awaiting whenever a
+  newer version was unapproved; (b) the dashboard strip rendered
+  only on jobs.json fetch, never after the Supabase overlay, so
+  it showed Approved 0 until the next full fetch. A third latent
+  bug found in the same review: dated topics sort first, so
+  dateless topics were pushed under the collapsed "Past months"
+  section. All three fixed here.
+- HOME IS NOW TITLE LINES ONLY (no images anywhere on home):
+  every section (Awaiting / Pending / Approved / Delivered) is a
+  clean list of topic titles with type, version count, status and
+  date. Click a title to open the topic.
+- GROUP SECTION RULE (corrected): a topic's section follows its
+  MOST ADVANCED version's status — if ANY version is approved,
+  the whole topic moves to Approved (work complete); same for
+  delivered. This is Bilal's rule: one approved version completes
+  the script.
+- CAROUSEL DETAIL: version NAME list first ("V1 — Topic", V1 on
+  top, then in order) — no slide images yet. Clicking a name (or
+  View) opens the IG-style lightbox for that version's slides
+  (the viewer Bilal likes, with Approve / Download / Comment).
+  Poster / Thumbnail / Cover details keep v2.4 version sections
+  (image + per-slide downloads + per-version ZIP + Approve).
+- PER-VERSION ZIP: every version carries its own Download ZIP
+  button (carousel list lines and poster sections). The topic
+  header shows "Download All as ZIP" ONLY when every version
+  shares one identical ZIP (old jobs); mixed per-version ZIPs
+  show per-version buttons only. The pakka prompt now requires
+  one ZIP per version for all new jobs (no more shared ZIP).
+- HISTORY MARKS (display-only, data never mutated): in an
+  approved/completed topic, the winning version shows green
+  "Approved ✓" and every other version shows soft-grey "Not
+  selected" — NO cross, NO red, NO strikethrough; the design
+  stays fully viewable and downloadable (the interview analogy:
+  all candidates worked hard, one was selected, the record
+  stays dignified). On home, approved topics carry a green ✓
+  before the title plus a "V2 approved" sub-line.
+- APPROVAL DATE SECTIONS + FILTER (history only): Approved and
+  Delivered topics are sub-grouped by approval date (from
+  Supabase job_status.updated_at; newest first; "Date not
+  recorded" last when unknown) with a date filter above the
+  history (pick a date, or All dates). The app now selects
+  updated_at from Supabase for this.
+- Dashboard strip now refreshes on every home render, so
+  overlay approvals update it immediately.
+- Bridge v3 (separate file, Apps Script — NOT in this repo):
+  sends Bilal a detailed email per submission (approval /
+  comment / new script) with topic, type, version, decision,
+  text and time, because Google Forms' built-in notification
+  never says what happened. The Form has no sign-in, so the
+  email cannot say who pressed the button; it notes that if
+  Bilal did not just press it, the client did. Updating the
+  bridge needs a fresh MailApp authorization (run
+  authorizeEmailOnce() once after pasting).
