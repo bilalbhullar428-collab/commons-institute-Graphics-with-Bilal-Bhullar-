@@ -1176,6 +1176,49 @@
           "download": "https://drive.google.com/uc?export=download&id=1GPI96FWnHPuVwBVRoh5C6tUPOj71w0-d"
         }
       ]
+    },
+    {
+      "id": "job-2026-10-31-new-provinces-fiscal-case-editorial-carousel-v4",
+      "date": "2026-10-31",
+      "topic": "New Provinces Fiscal Case Editorial Carousel",
+      "type": "Carousel",
+      "version": "V4",
+      "status": "awaiting-approval",
+      "slideCount": 6,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1LUaEn10aUG-oEipiMrHVnkciIO10Ew_y",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1EizKwan2uEY9GVYtbXyGAszwmN8325Tg&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1EizKwan2uEY9GVYtbXyGAszwmN8325Tg"
+        },
+        {
+          "name": "Slide 02",
+          "thumb": "https://drive.google.com/thumbnail?id=1GoI-Hf1PznBgWabasdSki_vjNbHkahfW&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1GoI-Hf1PznBgWabasdSki_vjNbHkahfW"
+        },
+        {
+          "name": "Slide 03",
+          "thumb": "https://drive.google.com/thumbnail?id=16X_-7TXSi53j5ry4Z4MRm4PWWiNmZDKL&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=16X_-7TXSi53j5ry4Z4MRm4PWWiNmZDKL"
+        },
+        {
+          "name": "Slide 04",
+          "thumb": "https://drive.google.com/thumbnail?id=1E1UnzREtcG3ZxujAyXfeQ9xBxA0j0qbY&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1E1UnzREtcG3ZxujAyXfeQ9xBxA0j0qbY"
+        },
+        {
+          "name": "Slide 05",
+          "thumb": "https://drive.google.com/thumbnail?id=1ahDEGdplZ6NJB5-NCQZPOUPuovWugJD2&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1ahDEGdplZ6NJB5-NCQZPOUPuovWugJD2"
+        },
+        {
+          "name": "Slide 06",
+          "thumb": "https://drive.google.com/thumbnail?id=13-iUpEZ9Ma5kZNI_dyFokL46MMeOL_on&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=13-iUpEZ9Ma5kZNI_dyFokL46MMeOL_on"
+        }
+      ]
     }
   ]
 }
