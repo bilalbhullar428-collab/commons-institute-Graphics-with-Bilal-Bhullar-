@@ -755,6 +755,39 @@
           "download": "https://drive.google.com/uc?export=download&id=1Wi8C8YJHRJPAMvxEd4WJLPB2V_08NOXN"
         }
       ]
+    },
+    {
+      "id": "job-2026-10-31-trump-says-iran-war-will-be-wrapped-up-soon-v1",
+      "date": "2026-10-31",
+      "topic": "Trump Says Iran War Will Be Wrapped Up Soon",
+      "type": "Carousel",
+      "version": "V1",
+      "status": "awaiting-approval",
+      "slideCount": 4,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=139nmNhpbwvgHawNUfiupL884Tiba0A3l",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1GjMXgDx6383opeuUEvERJGDYljnSf4kr&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1GjMXgDx6383opeuUEvERJGDYljnSf4kr"
+        },
+        {
+          "name": "Slide 02",
+          "thumb": "https://drive.google.com/thumbnail?id=1GscFs7mu1jyr1tW7qYWdztyOmOdGPo4K&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1GscFs7mu1jyr1tW7qYWdztyOmOdGPo4K"
+        },
+        {
+          "name": "Slide 03",
+          "thumb": "https://drive.google.com/thumbnail?id=1qxPOLjeBOcH-4-lm_MO2uXd1h5DKc4WJ&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1qxPOLjeBOcH-4-lm_MO2uXd1h5DKc4WJ"
+        },
+        {
+          "name": "Slide 04",
+          "thumb": "https://drive.google.com/thumbnail?id=1NUZI-5_-VwmFRSHncs-sm0QSEWfDf0Ne&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1NUZI-5_-VwmFRSHncs-sm0QSEWfDf0Ne"
+        }
+      ]
     }
   ]
 }
