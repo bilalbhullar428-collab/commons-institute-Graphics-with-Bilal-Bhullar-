@@ -328,5 +328,29 @@ https://bilalbhullar428-collab.github.io/commons-institute-Graphics-with-Bilal-B
 - Fix (CSS only, desktop untouched): below 640px the row becomes
   a GRID stack — row 1 = title + arrow, row 2 = full-width meta
   that wraps cleanly. Titles also get overflow-wrap: break-word.
-  Verified on the live site at phone width after this push (see
+- Verification status (honest): desktop width verified clean on
+  the live site by the browser check (all 6 rows, dashboard,
+  date groups); the served style.css contains the media query.
+  Phone-width visual proof is PENDING Bilal's own phone check —
+  the browser tool cannot resize its own window to 360px, so the
+  true phone test is Bilal opening the gallery on his phone (see
   plan §67).
+
+## v2.5.2 (31 Oct 2026) — lightbox image fully visible, no crop
+- Bilal's phone screenshot (31 Oct, Trump carousel slide 2 of 4)
+  showed the lightbox image CUT OFF top and bottom. Cause (owned):
+  .lightbox-img used max-height: 70vh while the stage box itself
+  is much shorter on phones (header + controls + bottom action
+  block eat most of the viewport), and the stage has
+  overflow: hidden with centered content — so a 1080x1350 image
+  at full container width grew taller than the stage and got
+  clipped at both ends. object-fit: contain could not save it,
+  because the img box itself overflowed.
+- Fix (CSS only): .lightbox-img now uses max-height: 100% with
+  width/height auto, so the image fits INSIDE the stage box on
+  both axes and always shows fully — 1080x1350 (Instagram
+  portrait, poster + carousel) governed by height, wider sizes
+  by width. No cropping for any design type.
+- Verification status (honest): desktop check on the live site
+  after push; phone-width visual proof PENDING Bilal's own phone
+  check, same limitation as v2.5.1.

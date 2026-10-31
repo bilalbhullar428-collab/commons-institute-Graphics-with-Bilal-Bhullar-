@@ -1261,7 +1261,12 @@ body {
 
 .lightbox-img {
   max-width: 100%;
-  max-height: 70vh;
+  /* v2.5.2: fit INSIDE the stage box (height governed by the stage, not
+     the viewport). 70vh let a 1080x1350 image grow taller than the stage
+     on phones, and the stage's overflow:hidden then clipped it top+bottom. */
+  max-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
   border-radius: var(--radius-sm);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
