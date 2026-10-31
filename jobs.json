@@ -1004,6 +1004,49 @@
           "download": "https://drive.google.com/uc?export=download&id=176g5sIKeG0DjsKHOUQVydJwo8E76__p5"
         }
       ]
+    },
+    {
+      "id": "job-2026-10-31-ms-or-css-v1",
+      "date": "2026-10-31",
+      "topic": "MS OR CSS",
+      "type": "Carousel",
+      "version": "V1",
+      "status": "awaiting-approval",
+      "slideCount": 6,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1SpZnIrnymXm2pV_5r7dvd3llhrsXaK9q",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1_iV07q36u-09YzMDchV4Z1L4wBj73Xes&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1_iV07q36u-09YzMDchV4Z1L4wBj73Xes"
+        },
+        {
+          "name": "Slide 02",
+          "thumb": "https://drive.google.com/thumbnail?id=1U6mCkfLq5Dglt_MYbYOHyGUe6gD3wB9i&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1U6mCkfLq5Dglt_MYbYOHyGUe6gD3wB9i"
+        },
+        {
+          "name": "Slide 03",
+          "thumb": "https://drive.google.com/thumbnail?id=1GhTEm3cshGeJLycRm0MapwqTeVdpQtSf&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1GhTEm3cshGeJLycRm0MapwqTeVdpQtSf"
+        },
+        {
+          "name": "Slide 04",
+          "thumb": "https://drive.google.com/thumbnail?id=1JaEkExsV9RCkK6rnUAUjjxrSSTzvb5Cd&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1JaEkExsV9RCkK6rnUAUjjxrSSTzvb5Cd"
+        },
+        {
+          "name": "Slide 05",
+          "thumb": "https://drive.google.com/thumbnail?id=1BQ-bYHRUQH6ahSptYRJxyGhXdq7cp_Ur&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1BQ-bYHRUQH6ahSptYRJxyGhXdq7cp_Ur"
+        },
+        {
+          "name": "Slide 06",
+          "thumb": "https://drive.google.com/thumbnail?id=1T25UlqtIvZ2BQCPVawY5CTshaDD2yWSp&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1T25UlqtIvZ2BQCPVawY5CTshaDD2yWSp"
+        }
+      ]
     }
   ]
 }
