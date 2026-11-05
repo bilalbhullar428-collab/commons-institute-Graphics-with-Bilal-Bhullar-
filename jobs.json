@@ -1219,6 +1219,44 @@
           "download": "https://drive.google.com/uc?export=download&id=13-iUpEZ9Ma5kZNI_dyFokL46MMeOL_on"
         }
       ]
+    },
+    {
+      "id": "job-2026-11-04-china-pakistan-information-corridor-cpic-v3",
+      "date": "2026-11-04",
+      "topic": "China-Pakistan Information Corridor (CPIC)",
+      "type": "Carousel",
+      "version": "V3",
+      "status": "awaiting-approval",
+      "slideCount": 5,
+      "size": "1080×1350",
+      "zipDownload": "https://drive.google.com/uc?export=download&id=1nrBwfgfJLX9TclNiZnLHgnKqHspWOD2D",
+      "slides": [
+        {
+          "name": "Slide 01",
+          "thumb": "https://drive.google.com/thumbnail?id=1tYXB6SsxHmPDqSyoKXufsXHm1mP43qof&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1tYXB6SsxHmPDqSyoKXufsXHm1mP43qof"
+        },
+        {
+          "name": "Slide 02",
+          "thumb": "https://drive.google.com/thumbnail?id=17tjKqGWizM2BonL1HpMYitL5uN6tCZ_J&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=17tjKqGWizM2BonL1HpMYitL5uN6tCZ_J"
+        },
+        {
+          "name": "Slide 03",
+          "thumb": "https://drive.google.com/thumbnail?id=1Nog8C9h96G6cvubPUL8EQd5PzGBMZuxe&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1Nog8C9h96G6cvubPUL8EQd5PzGBMZuxe"
+        },
+        {
+          "name": "Slide 04",
+          "thumb": "https://drive.google.com/thumbnail?id=1bnHeKe0i2TzZjeDoC9RHZry-PT8tMGPC&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1bnHeKe0i2TzZjeDoC9RHZry-PT8tMGPC"
+        },
+        {
+          "name": "Slide 05",
+          "thumb": "https://drive.google.com/thumbnail?id=1VpNgPle4UL8yxa0jFsvzP_6nV_wo-JfT&sz=w1000",
+          "download": "https://drive.google.com/uc?export=download&id=1VpNgPle4UL8yxa0jFsvzP_6nV_wo-JfT"
+        }
+      ]
     }
   ]
 }
